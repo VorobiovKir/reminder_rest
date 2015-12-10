@@ -8,7 +8,7 @@ from .forms import UserCreateForm
 
 def login(request):
     if request.user.is_authenticated():
-        return redirect(reverse('note:notes'))
+        return redirect(reverse('note:home'))
 
     args = {}
     if request.POST:
@@ -33,7 +33,7 @@ def logout(request):
 
 def registration(request):
     if request.user.is_authenticated():
-        return redirect(reverse('note:notes'))
+        return redirect(reverse('note:home'))
 
     args = {}
     if request.POST:
