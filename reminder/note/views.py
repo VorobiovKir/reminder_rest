@@ -1,0 +1,187 @@
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+from .models import Notes, Colors, Tags, Categories
+from .serializers import NotesSerializer, ColorsSerializer
+from .serializers import TagsSerializer, CategoriesSerializer
+
+from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+
+
+@permission_classes((IsAuthenticated, ))
+class NotesList(generics.ListCreateAPIView):
+    # queryset = Notes.objects.all()
+    serializer_class = NotesSerializer
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        serializer_class = NotesSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
+    def post(self, request, format=None):
+        serializer = NotesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+        return Response(status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        return Notes.objects.filter(author=self.request.user)
+
+
+@permission_classes((IsAuthenticated, ))
+class NotesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Notes.objects.all()
+    serializer_class = NotesSerializer
+
+    def get_object(self, pk, author):
+        try:
+            return Notes.objects.get(pk=pk, author=author)
+        except Notes.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        note = self.get_object(pk, request.user)
+        serializer = NotesSerializer(note)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        note = self.get_object(pk, request.user)
+        serializer = NotesSerializer(note, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        note = self.get_object(pk, request.user)
+        note.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@permission_classes((IsAuthenticated, ))
+class ColorsList(generics.ListCreateAPIView):
+    queryset = Colors.objects.all()
+    serializer_class = ColorsSerializer
+
+
+@permission_classes((IsAuthenticated, ))
+class ColorsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Colors.objects.all()
+    serializer_class = ColorsSerializer
+
+
+@permission_classes((IsAuthenticated, ))
+class TagsList(generics.ListCreateAPIView):
+    queryset = Tags.objects.all()
+    serializer_class = TagsSerializer
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        serializer_class = TagsSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
+    def post(self, request, format=None):
+        serializer = TagsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+        return Response(status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        return Tags.objects.filter(author=self.request.user)
+
+
+@permission_classes((IsAuthenticated, ))
+class TagsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tags.objects.all()
+    serializer_class = TagsSerializer
+
+    def get_object(self, pk, author):
+        try:
+            return Tags.objects.get(pk=pk, author=author)
+        except Tags.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        tag = self.get_object(pk, request.user)
+        serializer = TagsSerializer(tag)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        tag = self.get_object(pk, request.user)
+        serializer = TagsSerializer(tag, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        tag = self.get_object(pk, request.user)
+        tag.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@permission_classes((IsAuthenticated, ))
+class CategoriesList(generics.ListCreateAPIView):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        serializer_class = CategoriesSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
+    def post(self, request, format=None):
+        serializer = CategoriesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+        return Response(status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        return Categories.objects.filter(author=self.request.user)
+
+
+@permission_classes((IsAuthenticated, ))
+class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+
+    def get_object(self, pk, author):
+        try:
+            return Categories.objects.get(pk=pk, author=author)
+        except Categories.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        category = self.get_object(pk, request.user)
+        serializer = CategoriesSerializer(category)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        category = self.get_object(pk, request.user)
+        serializer = CategoriesSerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        category = self.get_object(pk, request.user)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# For redirect if not Auth
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view, login_url='/auth/login/')
+
+
+class MainPage(LoginRequiredMixin, TemplateView):
+    template_name = 'note/note.html'
