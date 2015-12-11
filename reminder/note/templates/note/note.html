@@ -27,20 +27,24 @@
 
 
 {% block content %}
+
+    <!-- PANEL START -->
     <div ng-app="note" ng-cloak>
     <div class="menu" ng-controller="PanelController as panel">
-        <ul>
-            <li><a href ng-click="panel.selectTab(1);" ng-class="{ active: panel.isSelected(1) }">Home</a></li>
-            <li><a href ng-click="panel.selectTab(2);" ng-class="{ active: panel.isSelected(2) }">Notes</a></li>
-            <li><a href ng-click="panel.selectTab(3);" ng-class="{ active: panel.isSelected(3) }">Tags</a></li>
-            <li><a href ng-click="panel.selectTab(4);" ng-class="{ active: panel.isSelected(4) }">Categories</a></li>
+        <ul class="nav nav-tabs">
+            <li><a role="presentation" href ng-click="panel.selectTab(1);" ng-class="{ active: panel.isSelected(1) }">Home</a></li>
+            <li><a role="presentation" href ng-click="panel.selectTab(2);" ng-class="{ active: panel.isSelected(2) }">Notes</a></li>
+            <li><a role="presentation" href ng-click="panel.selectTab(3);" ng-class="{ active: panel.isSelected(3) }">Tags</a></li>
+            <li><a role="presentation" href ng-click="panel.selectTab(4);" ng-class="{ active: panel.isSelected(4) }">Categories</a></li>
         </ul>
+    <!-- PANEL END -->
+
         <div ng-controller='NoteController as note'>
 
             <div ng-show="panel.isSelected(1)">
                 <h1>Home page</h1>
                 <div class="row">
-                    <div class="left col-md-3">
+                    <div class="left col-sm-3">
                         <div ng-hide='note.categories.length'>
                             <h3 style="color: gray; margin-top: 50px;">Categories not found</h3>
                             <p>Click here to <a href="#">add new category</a></p>
@@ -53,45 +57,45 @@
                         </ul>   
                     </div>
 
-                    <div class="right col-md-8 col-md-offset-1">
+                    <div class="right col-sm-8 col-sm-offset-1">
                         <h2>My Notes: </h2>
                         <div ng-hide='note.notes.length'>
                             <h3 style="color: gray; margin-top: 50px;">Notes not found</h3>
                             <p>Click here to <a href="#">add new note</a></p>
                         </div>
-                    </div>
+                    
+                        <div ng-repeat='note in note.notes'>
+                            <p>
+                                <a  role="button" data-toggle="collapse" href="#[[ note.id ]]" aria-expanded="false" aria-controls="collapseExample">
+                                    <span ng-show='note.title'>
+                                        [[ note.title ]]
+                                    </span>
+                                    <span ng-show='!note.title'>
+                                        no title
+                                    </span>
+                                </a>
+                            </p>
 
-                    <div ng-repeat='note in note.notes'>
-                        <p>
-                            <a  role="button" data-toggle="collapse" href="#[[ note.id ]]" aria-expanded="false" aria-controls="collapseExample">
-                                <span ng-show='note.title'>
-                                    [[ note.title ]]
-                                </span>
-                                <span ng-show='!note.title'>
-                                    no title
-                                </span>
-                            </a>
-                        </p>
-
-                        <div class="collapse" id="[[ note.id ]]">
-                            <div class="well">
-                                <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
-                                <a href="#" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a>
-                                <br>
-                                <span style="background-color:[[ note.color ]]; width: 10px; height: 10px; display: inline-block;"></span>
+                            <div class="collapse" id="[[ note.id ]]">
+                                <div class="well">
+                                    <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a href="#" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a>
+                                    <br>
+                                    <span style="background-color:[[ note.color ]]; width: 10px; height: 10px; display: inline-block;"></span>
                                     [[ note.context ]]
                                     <div ng-show='note.tag.length'>
                                         <hr>
-                                        <span ng-repeat='t in note.tag'>
-                                            <a href="#"><span class="glyphicon glyphicon glyphicon-tags"></span> [[ t ]]</a>
+                                        <span ng-repeat='tag in note.tag'>
+                                            <a href="#"><span class="glyphicon glyphicon glyphicon-tags"></span> [[ tag.name ]]</a>
                                         </span>
                                     </div>
                                     <div ng-show='note.category.length'>
                                         <hr>
-                                        <span ng-repeat='c in note.category'>
-                                            <a href="#">@ [[ c ]]</a>
+                                        <span ng-repeat='category in note.category'>
+                                            <a href="#">@ [[ category.name ]]</a>
                                         </span>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -100,22 +104,136 @@
 
             <hr>
 
-            <div ng-show="panel.isSelected(2)">This is a Work page</div>
-            <div ng-show="panel.isSelected(3)">This is a About page</div>
-            <div ng-show="panel.isSelected(4)">This is a About page</div>
+            <div ng-show="panel.isSelected(4)">
+            
+                    <form action="#" method="POST" class="form login_form">
+
+                        <h1>Create Category</h1>
+                            <button type="submit" class="btn btn-primary">
+                                 Submit
+                            </button>
+
+                    </form>
+                    <hr>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your Categories:</h3>
+                        </div>
+                        <form action="#" method="POST">
+                            <button type="submit" class="btn btn-primary pull-right">
+                                Delete
+                            </button>
+                            
+                            <table class="table table-hover">
+                                <thead style="font-weight: bold;">
+                                    <tr>
+                                        <td>#</td>
+                                        <td>Name</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <div ng-show='note.categories.length'>
+                                        <tr ng-repeat='category in note.categories'>
+                                            <td><input type="checkbox" name="remove_cat" value=""></td>
+                                            <td><a href=""> [[category.name]]</a></td>
+                                            <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                        </tr>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+            </div>
+
+
+            <div ng-show="panel.isSelected(3)">
+                
+                <form action="#" method="POST" class="form login_form">
+
+                    <h1>Create Tag</h1>
+                        <button type="submit" class="btn btn-primary">
+                             Submit
+                        </button>
+
+                </form>
+                <hr>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Tags:</h3>
+                    </div>
+                    <form action="#" method="POST">
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Delete
+                        </button>
+                        
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <div ng-show='note.tags.length'>
+                                    <tr ng-repeat='tag in note.tags'>
+                                        <td><input type="checkbox" name="remove_cat" value=""></td>
+                                        <td><a href=""> [[tag.name]]</a></td>
+                                        <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                    </tr>
+                                </div>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+            </div>
+
+            <div ng-show="panel.isSelected(2)">
+                
+                <form action="#" method="POST" class="form login_form">
+
+                    <h1>Create Note</h1>
+                        <button type="submit" class="btn btn-primary">
+                             Submit
+                        </button>
+
+                </form>
+                <hr>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Notes:</h3>
+                    </div>
+                    <form action="#" method="POST">
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Delete
+                        </button>
+                        
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <div ng-show='note.notes.length'>
+                                    <tr ng-repeat='note in note.notes'>
+                                        <td><input type="checkbox" name="remove_cat" value=""></td>
+                                        <td><a href=""> [[note.title]]</a></td>
+                                        <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                    </tr>
+                                </div>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+            </div>
 
         </div>
     </div>
 
-    <p>------------------------------------------</p>
-    <div ng-controller='NoteController as note'>
-    <h1>[[ note.test ]]</h1>
-    <div>[[ note.colors ]]</div>
-    <div>[[ note.tags ]]</div>
-    <div>[[ note.categories ]]</div>
-    <div>[[ note.notes ]]</div>
-    </div>
-    </div>
 
 <script type="text/javascript">
     
@@ -143,6 +261,7 @@
         });
         $http.get('/categories/').success(function(data) { 
             that.categories = data;
+            console.log(data);
         });
         $http.get('/notes/').success(function(data) { 
             that.notes = data;

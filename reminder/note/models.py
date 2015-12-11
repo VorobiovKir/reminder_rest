@@ -37,7 +37,7 @@ class Notes(models.Model):
     author = models.ForeignKey('auth.User')
 
     def __unicode__(self):
-        return self.name
+        return self.title
 
     class Meta:
         ordering = ('pub_date', )

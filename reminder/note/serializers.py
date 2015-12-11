@@ -36,8 +36,10 @@ class CategoriesSerializer(serializers.ModelSerializer):
 class NotesSerializer(serializers.ModelSerializer):
 
     author = serializers.ReadOnlyField(source='author.username')
+    tag = TagsSerializer(many=True)
+    category = CategoriesSerializer(many=True)
 
     class Meta:
         model = Notes
         fields = ('id', 'title', 'context', 'pub_date',
-                  'color', 'tag', 'category', 'author')
+                  'color', 'tag', 'category', 'author', 'tag')
