@@ -27,6 +27,18 @@ class Categories(models.Model):
         return self.name
 
 
+class Images(models.Model):
+    title = models.CharField(max_length=64)
+    img_dir = models.ImageField(
+        editable=True,
+        help_text="Note Picture",
+    )
+    author = models.ForeignKey('auth.User')
+
+    def __unicode__(self):
+        return self.title
+
+
 class Notes(models.Model):
     title = models.CharField(max_length=100)
     context = models.TextField()
@@ -34,6 +46,7 @@ class Notes(models.Model):
     color = models.ForeignKey(Colors, blank=True, null=True)
     tag = models.ManyToManyField(Tags, blank=True)
     category = models.ManyToManyField(Categories, blank=True)
+    image = models.ManyToManyField(Images, blank=True)
     author = models.ForeignKey('auth.User')
 
     def __unicode__(self):

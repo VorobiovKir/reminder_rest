@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Notes, Tags, Categories, Colors
+from .models import Notes, Tags, Categories, Colors, Images
 # from django.contrib.auth.models import User
 
 
@@ -33,13 +33,21 @@ class CategoriesSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'author')
 
 
+class ImagesSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Images
+        fields = ('id', 'title', 'img_dir', 'author')
+
+
 class NotesSerializer(serializers.ModelSerializer):
 
     author = serializers.ReadOnlyField(source='author.username')
-    tag = TagsSerializer(many=True)
-    category = CategoriesSerializer(many=True)
+    # tag = TagsSerializer(many=True, read_only=True)
+    # category = CategoriesSerializer(many=True, read_only=True)
 
     class Meta:
         model = Notes
         fields = ('id', 'title', 'context', 'pub_date',
-                  'color', 'tag', 'category', 'author', 'tag')
+                  'color', 'tag', 'category', 'author', 'tag', 'image')

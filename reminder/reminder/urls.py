@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from reminder import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('authorization.urls', namespace='author')),
     url(r'^', include('note.urls', namespace='note')),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}),
 ]

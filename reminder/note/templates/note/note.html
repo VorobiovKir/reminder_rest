@@ -1,4 +1,5 @@
 {% extends 'main.html' %}
+{% load rest_framework %}
 
 
 {% block author_menu %}
@@ -30,14 +31,15 @@
 
     <!-- PANEL START -->
     <div ng-app="note" ng-cloak>
-    <div class="menu" ng-controller="PanelController as panel">
-        <ul class="nav nav-tabs">
-            <li><a role="presentation" href ng-click="panel.selectTab(1);" ng-class="{ active: panel.isSelected(1) }">Home</a></li>
-            <li><a role="presentation" href ng-click="panel.selectTab(2);" ng-class="{ active: panel.isSelected(2) }">Notes</a></li>
-            <li><a role="presentation" href ng-click="panel.selectTab(3);" ng-class="{ active: panel.isSelected(3) }">Tags</a></li>
-            <li><a role="presentation" href ng-click="panel.selectTab(4);" ng-class="{ active: panel.isSelected(4) }">Categories</a></li>
-        </ul>
-    <!-- PANEL END -->
+        <div class="menu" ng-controller="PanelController as panel">
+            <ul class="nav nav-tabs">
+                <li><a role="presentation" href ng-click="panel.selectTab(1);" ng-class="{ active: panel.isSelected(1) }">Home</a></li>
+                <li><a role="presentation" href ng-click="panel.selectTab(2);" ng-class="{ active: panel.isSelected(2) }">Notes</a></li>
+                <li><a role="presentation" href ng-click="panel.selectTab(3);" ng-class="{ active: panel.isSelected(3) }">Tags</a></li>
+                <li><a role="presentation" href ng-click="panel.selectTab(4);" ng-class="{ active: panel.isSelected(4) }">Categories</a></li>
+                <li><a role="presentation" href ng-click="panel.selectTab(5);" ng-class="{ active: panel.isSelected(5) }">Images</a></li>
+            </ul>
+        <!-- PANEL END -->
 
         <div ng-controller='NoteController as note'>
 
@@ -99,30 +101,29 @@
                             </div>
                         </div>
                     </div>
-                </div>   
+                </div>
             </div>
 
             <hr>
 
             <div ng-show="panel.isSelected(4)">
             
-                    <form action="#" method="POST" class="form login_form">
-
+                    
                         <h1>Create Category</h1>
-                            <button type="submit" class="btn btn-primary">
+                        <input type="text" name='title' value="" />
+                            <button type="submit" class="btn btn-primary" ng-click='note.postCateg()'>
                                  Submit
                             </button>
 
-                    </form>
+                    
                     <hr>
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3 class="panel-title">Your Categories:</h3>
                         </div>
-                        <form action="#" method="POST">
-                            <button type="submit" class="btn btn-primary pull-right">
-                                Delete
-                            </button>
+                        
+                        
+                            <a href class="btn btn-primary pull-right" ng-click="note.delCateg();">Delete</a>
                             
                             <table class="table table-hover">
                                 <thead style="font-weight: bold;">
@@ -134,14 +135,14 @@
                                 <tbody>
                                     <div ng-show='note.categories.length'>
                                         <tr ng-repeat='category in note.categories'>
-                                            <td><input type="checkbox" name="remove_cat" value=""></td>
-                                            <td><a href=""> [[category.name]]</a></td>
+                                            <td><input type="checkbox" checklist-model="note.user.categories" checklist-value="category.id"></td>
+                                            <td><a href ng-click='note.putCateg([[ category.id ]])'> [[category.name]]</a></td>
                                             <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     </div>
                                 </tbody>
                             </table>
-                        </form>
+                        
                     </div>
 
             </div>
@@ -194,9 +195,9 @@
                 <form action="#" method="POST" class="form login_form">
 
                     <h1>Create Note</h1>
-                        <button type="submit" class="btn btn-primary">
-                             Submit
-                        </button>
+                    <button type="submit" class="btn btn-primary">
+                         Submit
+                    </button>
 
                 </form>
                 <hr>
@@ -231,54 +232,186 @@
 
             </div>
 
+            <div ng-show="panel.isSelected(5)">
+                
+                <form action="#" method="POST" class="form login_form">
+
+                    <h1>Create Images</h1>
+                        <button type="submit" class="btn btn-primary">
+                             Submit
+                        </button>
+
+                </form>
+                <hr>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Images:</h3>
+                    </div>
+                    <form action="#" method="POST">
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Delete
+                        </button>
+                        
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                    <td>Image</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <div ng-show='note.images.length'>
+                                    <tr ng-repeat='image in note.images'>
+                                        <td><input type="checkbox" name="remove_cat" value=""></td>
+                                        <td><a href=""> [[ image.title ]]</a></td>
+                                        <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
+                                        <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                    </tr>
+                                </div>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+            </div>
+
         </div>
+    </div>
     </div>
 
 
 <script type="text/javascript">
     
     // var app = angular.module('note', []);
-    var app = angular.module('note', []).config(function($httpProvider, $interpolateProvider) {
-        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-        $interpolateProvider.startSymbol('[[').endSymbol(']]');
-    });
 
-    app.controller('NoteController', function($http) {
-        var that = this;
+    // function MainCtrl($html) {
+        
+    //     var that = this;
 
-        this.colors = '';
-        this.tags = '';
-        this.categories = '';
-        this.notes = '';
+    //     this.colors = '';
+    //     this.tags = '';
+    //     this.categories = '';
+    //     this.notes = '';
+    //     this.images = '';
 
-        $http.get('/colors/').success(function(data) { 
-            that.colors = data;
+    //     this.test = function(test) {
+    //         alert(test);
+    //     };
+
+    //     this.user = {
+    //         categories: [],
+    //     }; 
+
+    //     $http.get('/colors/').success(function(data) { 
+    //         that.colors = data;
+    //     });
+    //     $http.get('/tags/').success(function(data) { 
+    //         that.tags = data;
+    //     });
+    //     $http.get('/categories/').success(function(data) { 
+    //         that.categories = data;
+    //         console.log(data);
+    //     });
+    //     $http.get('/notes/').success(function(data) { 
+    //         that.notes = data;
+    //     });
+    //     $http.get('/images/').success(function(data) { 
+    //         that.images = data;
+    //     });
+
+    //     this.postCateg = function() {
+    //         $http.post('/categories/', {'name': 'newajaxCateg'}). success(function(data) {
+    //             alert('success');
+    //         });
+    //     };
+
+    //     this.putCateg = function(id) {
+    //         $http.put('/categories/' + id + '/', {'name': 'changedCateg'}).success(alert('success'));
+    //     };
+
+    //     this.delCateg = function() {
+    //         for (var i = 0; i < this.user.categories.length; i++) {
+    //             $http.delete('/categories/' + this.user.categories[i]);
+    //         }
+
+    //     };
+    // }
+
+    angular
+        .module('note', ["checklist-model"])
+            .config(function($httpProvider, $interpolateProvider) {
+                $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+                $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+                $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                $interpolateProvider.startSymbol('[[').endSymbol(']]');
+            })
+        .controller('NoteController', function($http) {
+            var that = this;
+
+            this.colors = '';
+            this.tags = '';
+            this.categories = '';
+            this.notes = '';
+            this.images = '';
+
+            this.test = function(test) {
+                alert(test);
+            };
+
+            this.user = {
+                categories: [],
+            }; 
+
+            $http.get('/colors/').success(function(data) { 
+                that.colors = data;
+            });
+            $http.get('/tags/').success(function(data) { 
+                that.tags = data;
+            });
+            $http.get('/categories/').success(function(data) { 
+                that.categories = data;
+                console.log(data);
+            });
+            $http.get('/notes/').success(function(data) { 
+                that.notes = data;
+            });
+            $http.get('/images/').success(function(data) { 
+                that.images = data;
+            });
+
+            this.postCateg = function() {
+                $http.post('/categories/', {'name': 'newajaxCateg'}). success(function(data) {
+                    alert('success');
+                });
+            };
+
+            this.putCateg = function(id) {
+                $http.put('/categories/' + id + '/', {'name': 'changedCateg'}).success(alert('success'));
+            };
+
+            this.delCateg = function() {
+                for (var i = 0; i < this.user.categories.length; i++) {
+                    $http.delete('/categories/' + this.user.categories[i]);
+                }
+
+            };
+
+
+        })
+        .controller('PanelController', function() {
+            this.tab = 1;
+
+            this.selectTab = function(setTab) {
+                this.tab = setTab;
+            };
+
+            this.isSelected = function(checkTab) {
+                return this.tab === checkTab;
+            };
         });
-        $http.get('/tags/').success(function(data) { 
-            that.tags = data;
-        });
-        $http.get('/categories/').success(function(data) { 
-            that.categories = data;
-            console.log(data);
-        });
-        $http.get('/notes/').success(function(data) { 
-            that.notes = data;
-        });
-    });
 
-    app.controller('PanelController', function() {
-        this.tab = 1;
-
-        this.selectTab = function(setTab) {
-            this.tab = setTab;
-        };
-
-        this.isSelected = function(checkTab) {
-            return this.tab === checkTab;
-        };
-    });
+    
 
 </script>
 

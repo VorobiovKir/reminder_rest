@@ -13,6 +13,7 @@
     {% block local_css %}{% endblock %}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src={% static 'js/checklist-model.js' %}></script>
 </head>
 
 <body>
@@ -23,6 +24,7 @@
                     <a class="navbar-brand" href="/">Reminder</a>
                 </div>
                 {% block author_menu %}{% endblock %}
+            </div>
         </nav>
         <div class="page-header">
             <h1>Reminder Me <small>we allways remind you about everything</small></h1>

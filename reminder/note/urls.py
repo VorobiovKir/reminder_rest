@@ -13,7 +13,10 @@ urlpatterns = [
     url(r'^categories/$', views.CategoriesList.as_view(), name='categories'),
     url(r'^categories/(?P<pk>[0-9]+)/$',
         views.CategoriesDetail.as_view(), name='category'),
-    url(r'^', views.MainPage.as_view(), name='home'),
+    url(r'^images/(?P<pk>[0-9]+)/$',
+        views.ImagesDetail.as_view(), name='images'),
+    url(r'^images/', views.ImagesList.as_view(), name='image'),
+    url(r'^$', views.MainPage.as_view(), name='home'),
     url(r'^api-auth/',
-        include('rest_framework.urls', namespace='rest_framework'))
+        include('rest_framework.urls', namespace='rest_framework')),
 ]
