@@ -191,23 +191,25 @@
 
             <div ng-show="panel.isSelected(2)">
 
-                    <h1>Create Note</h1>
+                    <h1>[[ note.note.helpText.action ]]
+                        <button type="submit" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
+                    </h1>
                     <div class="form-group">
                         <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+                          <input type="text" ng-model="note.note.data.title" class="form-control" id="inputTitle" placeholder="Title">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputContext" class="col-sm-offset-1 col-sm-1 control-label">Context</label>
                         <div class="col-sm-10">
-                          <textarea name="context" id="inputContext" class="form-control" rows="5" placeholder="Context"></textarea>
+                          <textarea name="context" ng-model="note.note.data.context" id="inputContext" class="form-control" rows="5" placeholder="Context"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="inputColor">
+                            <select class="form-control" id="inputColor" ng-model="note.note.data.color">
                                 <option value="">---------------</option>
                                 <!-- ng-attr-selected="id === value" -->
                                 <option ng-repeat="color in note.colors" value="[[color.id]]">[[color.name]]</option>
@@ -217,7 +219,7 @@
                     <div class="form-group">
                         <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
                         <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputTag">
+                            <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag">
                                 <!-- ng-attr-selected="id === value" -->
                                 <!-- ng-selected='tag.id===1' -->
                                 <option ng-repeat="tag in note.tags" value="[[tag.id]]">[[tag.name]]</option>
@@ -227,15 +229,24 @@
                     <div class="form-group">
                         <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
                         <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputCateg">
+                            <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category">
                                 <option ng-repeat="category in note.categories" value="[[category.id]]">[[category.name]]</option>
                             </select>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">
-                         Submit
-                    </button>
+                    <div class="form-group">
+                        <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
+                        <div class="col-sm-10">
+                            <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image">
+                                <option ng-repeat="image in note.images" value="[[image.id]]">[[image.title]] - [[image.img_dir]]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-8">
+                            <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getUrl(img)]]" height="125" alt=""></span>
+                        </div>
+                    </div>
 
                 <hr>
                 <div class="panel panel-info">
@@ -318,61 +329,6 @@
 
 
 <script type="text/javascript">
-
-    // var app = angular.module('note', []);
-
-    // function MainCtrl($html) {
-
-    //     var that = this;
-
-    //     this.colors = '';
-    //     this.tags = '';
-    //     this.categories = '';
-    //     this.notes = '';
-    //     this.images = '';
-
-    //     this.test = function(test) {
-    //         alert(test);
-    //     };
-
-    //     this.user = {
-    //         categories: [],
-    //     };
-
-    //     $http.get('/colors/').success(function(data) {
-    //         that.colors = data;
-    //     });
-    //     $http.get('/tags/').success(function(data) {
-    //         that.tags = data;
-    //     });
-    //     $http.get('/categories/').success(function(data) {
-    //         that.categories = data;
-    //         console.log(data);
-    //     });
-    //     $http.get('/notes/').success(function(data) {
-    //         that.notes = data;
-    //     });
-    //     $http.get('/images/').success(function(data) {
-    //         that.images = data;
-    //     });
-
-    //     this.postCateg = function() {
-    //         $http.post('/categories/', {'name': 'newajaxCateg'}). success(function(data) {
-    //             alert('success');
-    //         });
-    //     };
-
-    //     this.putCateg = function(id) {
-    //         $http.put('/categories/' + id + '/', {'name': 'changedCateg'}).success(alert('success'));
-    //     };
-
-    //     this.delCateg = function() {
-    //         for (var i = 0; i < this.user.categories.length; i++) {
-    //             $http.delete('/categories/' + this.user.categories[i]);
-    //         }
-
-    //     };
-    // }
 
     angular
         .module('note', ["checklist-model"])
@@ -489,10 +445,15 @@
                 id: '',
                 url: '/notes/',
                 data: {
-                    name: '',
+                    title: '',
+                    context: '',
+                    color: '',
+                    tag: '',
+                    category: '',
+                    image: ''
                 },
                 helpText: {
-                    action: 'Create note',
+                    action: 'Create Note',
                 },
                 actions: {
                     get: function() {
@@ -543,6 +504,20 @@
                 that.images = data;
             });
 
+            this.test = function(some) {
+                alert(some);
+                console.log(some);
+            };
+
+            this.getUrl = function(id) {
+                for (var i = 0; i < this.images.length; i++) {
+                    if (that.images[i].id == id) {
+                        return that.images[i].img_dir;
+                    };
+                };
+            };
+
+
         })
         .controller('PanelController', function() {
             this.tab = 1;
@@ -555,8 +530,6 @@
                 return this.tab === checkTab;
             };
         });
-
-
 
 </script>
 
