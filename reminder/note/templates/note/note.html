@@ -192,7 +192,11 @@
             <div ng-show="panel.isSelected(2)">
 
                     <h1>[[ note.note.helpText.action ]]
-                        <button type="submit" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
+                        <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
+                         <span ng-show="note.note.id">
+                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.npte.id]])'>Change</button>
+                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
+                        </span>
                     </h1>
                     <div class="form-group">
                         <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
@@ -221,8 +225,8 @@
                         <div class="col-sm-10">
                             <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag">
                                 <!-- ng-attr-selected="id === value" -->
-                                <!-- ng-selected='tag.id===1' -->
-                                <option ng-repeat="tag in note.tags" value="[[tag.id]]">[[tag.name]]</option>
+                                <!-- ng-selected='note.note.actions.isSelect(tag.id, note.tags)' -->
+                                <option ng-repeat="tag in note.tags" value="[[tag.id]]" ng-attr-selected='selected'>[[tag.name]]</option>
                             </select>
                         </div>
                     </div>
@@ -267,9 +271,9 @@
                             </thead>
                             <tbody>
                                 <div ng-show='note.notes.length'>
-                                    <tr ng-repeat='note in note.notes'>
+                                    <tr ng-repeat='localNote in note.notes'>
                                         <td><input type="checkbox" name="remove_cat" value=""></td>
-                                        <td><a href=""> [[note.title]]</a></td>
+                                        <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
                                         <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
                                     </tr>
                                 </div>
@@ -448,9 +452,9 @@
                     title: '',
                     context: '',
                     color: '',
-                    tag: '',
-                    category: '',
-                    image: ''
+                    tag: [],
+                    category: [],
+                    image: []
                 },
                 helpText: {
                     action: 'Create Note',
@@ -475,15 +479,26 @@
                             that.note.actions.delete(that.user.notes[i]);
                         };
                     },
-                    set: function(id, name) {
-                        that.note.id = id;
-                        that.note.data.name = name;
-                        that.note.helpText.action = 'Change note ' + id;
+                    set: function(data) {
+                        that.note.id = data.id;
+                        that.note.data = data;
+                        that.note.helpText.action = 'Change Note ' + that.note.data.id
                     },
                     clear: function() {
                         that.note.id = '';
-                        that.note.data.name = '';
-                        that.note.helpText.action = 'Create note';
+                        that.note.data.title = '';
+                        that.note.data.context = '';
+                        that.note.data.color = '';
+                        that.note.data.tag = [];
+                        that.note.data.category = [];
+                        that.note.data.image = [];
+                        that.note.helpText.action = 'Create Note';
+                    },
+                    isSelect: function(id, array) {
+                        for (var i = 0; i < array.length; i++) {
+                            if (id === array[i]) return true;
+                        };
+                        return false;
                     },
                 }
             };
