@@ -194,7 +194,7 @@
                     <h1>[[ note.note.helpText.action ]]
                         <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
                          <span ng-show="note.note.id">
-                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.npte.id]])'>Change</button>
+                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.note.id]])'>Change</button>
                             <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
                         </span>
                     </h1>
@@ -213,37 +213,25 @@
                     <div class="form-group">
                         <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="inputColor" ng-model="note.note.data.color">
-                                <option value="">---------------</option>
-                                <!-- ng-attr-selected="id === value" -->
-                                <option ng-repeat="color in note.colors" value="[[color.id]]">[[color.name]]</option>
-                            </select>
+                            <select class="form-control" id="inputColor" ng-model="note.note.data.color" ng-options="c.id as c.name for c in note.colors"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
                         <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag">
-                                <!-- ng-attr-selected="id === value" -->
-                                <!-- ng-selected='note.note.actions.isSelect(tag.id, note.tags)' -->
-                                <option ng-repeat="tag in note.tags" value="[[tag.id]]" ng-attr-selected='selected'>[[tag.name]]</option>
-                            </select>
+                            <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag" ng-options="t.id as t.name for t in note.tags"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
                         <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category">
-                                <option ng-repeat="category in note.categories" value="[[category.id]]">[[category.name]]</option>
-                            </select>
+                            <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category" ng-options="c.id as c.name for c in note.categories"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
                         <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image">
-                                <option ng-repeat="image in note.images" value="[[image.id]]">[[image.title]] - [[image.img_dir]]</option>
-                            </select>
+                            <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image" ng-options="i.id as i.title for i in note.images"></select>
                         </div>
                     </div>
                     <div class="row">
@@ -271,6 +259,7 @@
                             </thead>
                             <tbody>
                                 <div ng-show='note.notes.length'>
+                                [[note.notes]]
                                     <tr ng-repeat='localNote in note.notes'>
                                         <td><input type="checkbox" name="remove_cat" value=""></td>
                                         <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
@@ -481,7 +470,12 @@
                     },
                     set: function(data) {
                         that.note.id = data.id;
-                        that.note.data = data;
+                        that.note.data.title = data.title;
+                        that.note.data.context = data.context;
+                        that.note.data.color = data.color;
+                        that.note.data.tag = data.tag;
+                        that.note.data.category = data.category;
+                        that.note.data.image = data.image;
                         that.note.helpText.action = 'Change Note ' + that.note.data.id
                     },
                     clear: function() {
@@ -495,10 +489,7 @@
                         that.note.helpText.action = 'Create Note';
                     },
                     isSelect: function(id, array) {
-                        for (var i = 0; i < array.length; i++) {
-                            if (id === array[i]) return true;
-                        };
-                        return false;
+                        return array.indexOf(id) != -1 || false;
                     },
                 }
             };
@@ -518,6 +509,7 @@
             $http.get('/images/').success(function(data) {
                 that.images = data;
             });
+
 
             this.test = function(some) {
                 alert(some);
