@@ -11,6 +11,7 @@ from .serializers import TagsSerializer, CategoriesSerializer, ImagesSerializer
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
+from django.shortcuts import redirect
 
 
 @permission_classes((IsAuthenticated, ))
@@ -177,6 +178,7 @@ class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # For redirect if not Auth
 class LoginRequiredMixin(object):
+
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
@@ -198,10 +200,13 @@ class ImagesList(generics.ListCreateAPIView):
         return Response(serializer_class.data)
 
     def post(self, request, format=None):
-        serializer = ImagesSerializer(data=request.data)
+        serializer = ImagesSerializer(data={'img_dir': request.FILES.get('file'), 'title': request.POST.get('title')})
+        # serializer = ImagesSerializer(data=request.data, files=request.FILES)
         if serializer.is_valid():
             serializer.save(author=request.user)
-        return Response(status=status.HTTP_201_CREATED)
+
+        # return Response(status=status.HTTP_201_CREATED).render()
+        return redirect('/')
 
     def get_queryset(self):
         return Images.objects.filter(author=self.request.user)

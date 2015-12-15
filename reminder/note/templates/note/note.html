@@ -245,10 +245,8 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Notes:</h3>
                     </div>
-                    <form action="#" method="POST">
-                        <button type="submit" class="btn btn-primary pull-right">
-                            Delete
-                        </button>
+
+                        <a href class="btn btn-primary pull-right" ng-click="note.note.actions.deleteNots();">Delete</a>
 
                         <table class="table table-hover">
                             <thead style="font-weight: bold;">
@@ -259,38 +257,37 @@
                             </thead>
                             <tbody>
                                 <div ng-show='note.notes.length'>
-                                [[note.notes]]
                                     <tr ng-repeat='localNote in note.notes'>
-                                        <td><input type="checkbox" name="remove_cat" value=""></td>
+                                        <td><input type="checkbox" checklist-model="note.user.notes" checklist-value="localNote.id"></td>
                                         <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
-                                        <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                        <td><a href="" ng-click="note.note.actions.delete([[localNote.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
                                     </tr>
                                 </div>
                             </tbody>
                         </table>
-                    </form>
                 </div>
             </div>
 
             <div ng-show="panel.isSelected(5)">
 
-                <form action="#" method="POST" class="form login_form">
 
                     <h1>Create Images</h1>
+                    <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                        <input type="text" name="title">
+                        <input type="file" name="file">
                         <button type="submit" class="btn btn-primary">
-                             Submit
+                                Submit
                         </button>
+                    </form>
 
-                </form>
+
                 <hr>
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Images:</h3>
                     </div>
-                    <form action="#" method="POST">
-                        <button type="submit" class="btn btn-primary pull-right">
-                            Delete
-                        </button>
+
+                         <a href class="btn btn-primary pull-right" ng-click="note.image.actions.deleteImages();">Delete</a>
 
                         <table class="table table-hover">
                             <thead style="font-weight: bold;">
@@ -303,15 +300,15 @@
                             <tbody>
                                 <div ng-show='note.images.length'>
                                     <tr ng-repeat='image in note.images'>
-                                        <td><input type="checkbox" name="remove_cat" value=""></td>
-                                        <td><a href=""> [[ image.title ]]</a></td>
+                                        <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
+                                        <td><a href ng-click="note.image.actions.set(image)">[[ image.title ]]</a></td>
                                         <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
-                                        <td><a href="" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                        <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
                                     </tr>
                                 </div>
                             </tbody>
                         </table>
-                    </form>
+
                 </div>
 
             </div>
@@ -344,7 +341,8 @@
             this.user = {
                 categories: [],
                 tags: [],
-                notes: []
+                notes: [],
+                images: []
             };
 
             // CATEGORY
@@ -463,7 +461,7 @@
                             $http.delete(that.note.url + id + '/');
                         };
                     },
-                    deleteCats: function() {
+                    deleteNots: function() {
                         for (var i = 0; i < that.user.notes.length; i++) {
                             that.note.actions.delete(that.user.notes[i]);
                         };
@@ -490,6 +488,50 @@
                     },
                     isSelect: function(id, array) {
                         return array.indexOf(id) != -1 || false;
+                    },
+                }
+            };
+
+            // IMAGES
+            this.image = {
+                id: '',
+                url: '/images/',
+                data: {
+                    name: '',
+                    file: ''
+                },
+                helpText: {
+                    action: 'Create image',
+                },
+                actions: {
+                    get: function() {
+                        $http.get(that.image.url).success(function(data) {that.images = data;});
+                    },
+                    post: function() {
+                        $http.post(that.image.url, that.image.data).success(function(data) { alert('success'); });
+                    },
+                    put: function(id) {
+                        $http.put(that.image.url + id + '/', that.image.data).success(alert('success'));
+                    },
+                    delete: function(id) {
+                        if (confirm('Do you really want to delete?')) {
+                            $http.delete(that.image.url + id + '/');
+                        };
+                    },
+                    deleteImages: function() {
+                        for (var i = 0; i < that.user.images.length; i++) {
+                            that.image.actions.delete(that.user.images[i]);
+                        };
+                    },
+                    set: function(id, name) {
+                        that.image.id = id;
+                        that.image.data.name = name;
+                        that.image.helpText.action = 'Change image ' + id;
+                    },
+                    clear: function() {
+                        that.image.id = '';
+                        that.image.data.name = '';
+                        that.image.helpText.action = 'Create image';
                     },
                 }
             };
@@ -524,7 +566,6 @@
                 };
             };
 
-
         })
         .controller('PanelController', function() {
             this.tab = 1;
@@ -542,4 +583,3 @@
 
 
 {% endblock %}
-
