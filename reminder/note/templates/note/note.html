@@ -49,7 +49,7 @@
                     <div class="left col-sm-3">
                         <div ng-hide='note.categories.length'>
                             <h3 style="color: gray; margin-top: 50px;">Categories not found</h3>
-                            <p>Click here to <a href="#">add new category</a></p>
+                            <p>Click here to <a href ng-click="panel.selectTab(4)">add new category</a></p>
                         </div>
                         <ul style="list-style: none; font-size: 14px;" ng-repeat='category in note.categories'>
                             <li>
@@ -63,7 +63,7 @@
                         <h2>My Notes: </h2>
                         <div ng-hide='note.notes.length'>
                             <h3 style="color: gray; margin-top: 50px;">Notes not found</h3>
-                            <p>Click here to <a href="#">add new note</a></p>
+                            <p>Click here to <a href ng-click="panel.selectTab(2)">add new note</a></p>
                         </div>
 
                         <div ng-repeat='note in note.notes'>
@@ -107,208 +107,173 @@
             <hr>
 
             <div ng-show="panel.isSelected(4)">
-
-
-                    <h1>[[ note.category.helpText.action ]]</h1>
-                    <input type="text" name='title' value="[[ note.category.data.name ]]" ng-model="note.category.data.name" />
-                    <button ng-hide="note.category.id" type="submit" class="btn btn-primary" ng-click='note.category.actions.post()'>Submit</button>
-                    <span ng-show="note.category.id">
-                        <button type="submit" class="btn btn-primary" ng-click='note.category.actions.put([[note.category.id]])'>Change</button>
-                        <button type="submit" class="btn btn-primary" ng-click='note.category.actions.clear()'>Cancel</button>
-                    </span>
-
-                    <hr>
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Your Categories:</h3>
-                        </div>
-
-
-                            <a href class="btn btn-primary pull-right" ng-click="note.category.actions.deleteCats();">Delete</a>
-
-                            <table class="table table-hover">
-                                <thead style="font-weight: bold;">
-                                    <tr>
-                                        <td>#</td>
-                                        <td>Name</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <div ng-show='note.categories.length'>
-                                        <tr ng-repeat='category in note.categories'>
-                                            <td><input type="checkbox" checklist-model="note.user.categories" checklist-value="category.id"></td>
-                                            <td><a href ng-click='note.category.actions.set([[category.id]], [[category.name]])'>[[category.name]]</a></td>
-                                            <td><a href="" ng-click='note.category.actions.delete([[category.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
-                                        </tr>
-                                        <!-- ng-click='note.putCateg([[ category.id ]])' -->
-                                    </div>
-                                </tbody>
-                            </table>
-
+                <h1>[[ note.category.helpText.action ]]</h1>
+                <input type="text" name='title' value="[[ note.category.data.name ]]" class="form-control" placeholder="Name Category" ng-model="note.category.data.name" style="margin-bottom: 30px;" />
+                <button ng-hide="note.category.id" type="submit" class="btn btn-primary" class="col-md-4" ng-click='note.category.actions.post()'>Submit</button>
+                <span ng-show="note.category.id">
+                    <button type="submit" class="btn btn-primary" ng-click='note.category.actions.put([[note.category.id]])'>Change</button>
+                    <button type="submit" class="btn btn-primary" ng-click='note.category.actions.clear()'>Cancel</button>
+                </span>
+                <hr>
+                <div class="panel panel-info" ng-show='note.categories.length'>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Categories:</h3>
                     </div>
-
+                    <a href class="btn btn-primary pull-right" ng-click="note.category.actions.deleteCats();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                    <table class="table table-hover">
+                        <thead style="font-weight: bold;">
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='category in note.categories'>
+                                <td><input type="checkbox" checklist-model="note.user.categories" checklist-value="category.id"></td>
+                                <td><a href ng-click='note.category.actions.set([[category.id]], [[category.name]])'>[[category.name]]</a></td>
+                                <td><a href="" ng-click='note.category.actions.delete([[category.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-
             <div ng-show="panel.isSelected(3)">
-
                 <h1>[[ note.tag.helpText.action ]]</h1>
-                <input type="text" name='title' value="[[ note.tag.data.name ]]" ng-model="note.tag.data.name" />
+                <input type="text" name='title' value="[[ note.tag.data.name ]]" ng-model="note.tag.data.name" class="form-control" style="margin-bottom: 30px;" placeholder="Name Tag" />
                 <button ng-hide="note.tag.id" type="submit" class="btn btn-primary" ng-click='note.tag.actions.post()'>Submit</button>
                 <span ng-show="note.tag.id">
                     <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.put([[note.tag.id]])'>Change</button>
                     <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.clear()'>Cancel</button>
                 </span>
-
                 <hr>
-                <div class="panel panel-info">
+                <div class="panel panel-info" ng-show='note.tags.length'>
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Tags:</h3>
                     </div>
-
-                        <a href class="btn btn-primary pull-right" ng-click="note.tag.actions.deleteTags();">Delete</a>
-
-                        <table class="table table-hover">
-                            <thead style="font-weight: bold;">
-                                <tr>
-                                    <td>#</td>
-                                    <td>Name</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <div ng-show='note.tags.length'>
-                                    <tr ng-repeat='tag in note.tags'>
-                                        <td><input type="checkbox" checklist-model="note.user.tags" checklist-value="tag.id"></td>
-                                        <td><a href ng-click='note.tag.actions.set([[tag.id]], [[tag.name]])'>[[tag.name]]</a></td>
-                                        <td><a href="" ng-click='note.tag.actions.delete([[tag.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
-                                    </tr>
-                                </div>
-                            </tbody>
-                        </table>
+                    <a href class="btn btn-primary pull-right" ng-click="note.tag.actions.deleteTags();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                    <table class="table table-hover">
+                        <thead style="font-weight: bold;">
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='tag in note.tags'>
+                                <td><input type="checkbox" checklist-model="note.user.tags" checklist-value="tag.id"></td>
+                                <td><a href ng-click='note.tag.actions.set([[tag.id]], [[tag.name]])'>[[tag.name]]</a></td>
+                                <td><a href="" ng-click='note.tag.actions.delete([[tag.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
 
             <div ng-show="panel.isSelected(2)">
-
-                    <h1>[[ note.note.helpText.action ]]
-                        <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
-                         <span ng-show="note.note.id">
-                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.note.id]])'>Change</button>
-                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
-                        </span>
-                    </h1>
-                    <div class="form-group">
-                        <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
-                        <div class="col-sm-10">
-                          <input type="text" ng-model="note.note.data.title" class="form-control" id="inputTitle" placeholder="Title">
-                        </div>
+                <h1>[[ note.note.helpText.action ]]
+                    <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
+                    <span ng-show="note.note.id">
+                        <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.note.id]])'>Change</button>
+                        <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
+                    </span>
+                </h1>
+                <div class="form-group">
+                    <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
+                    <div class="col-sm-10">
+                      <input type="text" ng-model="note.note.data.title" class="form-control" id="inputTitle" placeholder="Title" style="margin-bottom: 15px;">
                     </div>
-                    <div class="form-group">
-                        <label for="inputContext" class="col-sm-offset-1 col-sm-1 control-label">Context</label>
-                        <div class="col-sm-10">
-                          <textarea name="context" ng-model="note.note.data.context" id="inputContext" class="form-control" rows="5" placeholder="Context"></textarea>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputContext" class="col-sm-offset-1 col-sm-1 control-label">Context</label>
+                    <div class="col-sm-10">
+                        <textarea name="context" ng-model="note.note.data.context" id="inputContext" class="form-control" rows="5" placeholder="Context" style="margin-bottom: 15px;"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="inputColor" ng-model="note.note.data.color" ng-options="c.id as c.name for c in note.colors"></select>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="inputColor" ng-model="note.note.data.color" ng-options="c.id as c.name for c in note.colors" style="margin-bottom: 15px;"></select>
                     </div>
-                    <div class="form-group">
-                        <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
-                        <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag" ng-options="t.id as t.name for t in note.tags"></select>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
+                    <div class="col-sm-10">
+                        <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag" ng-options="t.id as t.name for t in note.tags" style="margin-bottom: 15px;"></select>
                     </div>
-                    <div class="form-group">
-                        <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
-                        <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category" ng-options="c.id as c.name for c in note.categories"></select>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
+                    <div class="col-sm-10">
+                        <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category" ng-options="c.id as c.name for c in note.categories" style="margin-bottom: 15px;"></select>
                     </div>
-                    <div class="form-group">
-                        <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
-                        <div class="col-sm-10">
-                            <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image" ng-options="i.id as i.title for i in note.images"></select>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
+                    <div class="col-sm-10">
+                        <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image" ng-options="i.id as i.title for i in note.images" style="margin-bottom: 15px;"></select>
                     </div>
-                    <div class="row">
-                        <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-8">
-                            <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getUrl(img)]]" height="125" alt=""></span>
-                        </div>
+                </div>
+                <div class="row">
+                    <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-10">
+                        <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getUrl(img)]]" height="100" alt="" style="margin-bottom: 15px; margin-right:5px;"></span>
                     </div>
-
+                </div>
                 <hr>
-                <div class="panel panel-info">
+                <div class="panel panel-info" ng-show='note.notes.length'>
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Notes:</h3>
                     </div>
-
-                        <a href class="btn btn-primary pull-right" ng-click="note.note.actions.deleteNots();">Delete</a>
-
-                        <table class="table table-hover">
-                            <thead style="font-weight: bold;">
-                                <tr>
-                                    <td>#</td>
-                                    <td>Name</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <div ng-show='note.notes.length'>
-                                    <tr ng-repeat='localNote in note.notes'>
-                                        <td><input type="checkbox" checklist-model="note.user.notes" checklist-value="localNote.id"></td>
-                                        <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
-                                        <td><a href="" ng-click="note.note.actions.delete([[localNote.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
-                                    </tr>
-                                </div>
-                            </tbody>
-                        </table>
+                    <a href class="btn btn-primary pull-right" ng-click="note.note.actions.deleteNots();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                    <table class="table table-hover">
+                        <thead style="font-weight: bold;">
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='localNote in note.notes'>
+                                <td><input type="checkbox" checklist-model="note.user.notes" checklist-value="localNote.id"></td>
+                                <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
+                                <td><a href="" ng-click="note.note.actions.delete([[localNote.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <div ng-show="panel.isSelected(5)">
-
-
-                    <h1>Create Image</h1>
-                    <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                        <input type="text" name="title">
-                        <input type="file" name="file">
-                        <button type="submit" class="btn btn-primary" ng-click="note.image.actions.post()">Create</button>
-                    </form>
-
-
+                <h1>Create Image</h1>
+                <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="text" name="title" class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
+                    <input type="file" name="file" class="form-control" style="margin-bottom: 10px;">
+                    <button type="submit" class="btn btn-primary" ng-click="note.image.actions.post()">Create</button>
+                </form>
                 <hr>
-                <div class="panel panel-info">
+                <div class="panel panel-info" ng-show='note.images.length'>
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Images:</h3>
                     </div>
-
-                         <a href class="btn btn-primary pull-right" ng-click="note.image.actions.deleteImages();">Delete</a>
-
-                        <table class="table table-hover">
-                            <thead style="font-weight: bold;">
-                                <tr>
-                                    <td>#</td>
-                                    <td>Name</td>
-                                    <td>Image</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <div ng-show='note.images.length'>
-                                    <tr ng-repeat='image in note.images'>
-                                        <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
-                                        <td>[[ image.title ]]</td>
-                                        <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
-                                        <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
-                                    </tr>
-                                </div>
-                            </tbody>
-                        </table>
-
+                    <a href class="btn btn-primary pull-right" ng-click="note.image.actions.deleteImages();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                    <table class="table table-hover">
+                        <thead style="font-weight: bold;">
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                                <td>Image</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='image in note.images'>
+                                <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
+                                <td>[[ image.title ]]</td>
+                                <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
+                                <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
 
         </div>
@@ -358,19 +323,31 @@
                         $http.get(that.category.url).success(function(data) {that.categories = data;});
                     },
                     post: function() {
-                        $http.post(that.category.url, that.category.data).success(function(data) { alert('success'); });
+                        $http.post(that.category.url, that.category.data).success(
+                            function(data) {
+                                that.category.actions.get();
+                                that.category.actions.clear();
+                            });
                     },
                     put: function(id) {
-                        $http.put(that.category.url + id + '/', that.category.data).success(alert('success'));
+                        $http.put(that.category.url + id + '/', that.category.data).success(
+                            function() {
+                                that.category.actions.get();
+                                that.category.actions.clear();
+                            });
                     },
                     delete: function(id) {
-                        if (confirm('Do you really want to delete?')) {
-                            $http.delete(that.category.url + id + '/');
-                        };
+                        $http.delete(that.category.url + id + '/').success(
+                            function() {
+                                that.category.actions.get();
+                                that.category.actions.clear();
+                            });
                     },
                     deleteCats: function() {
-                        for (var i = 0; i < that.user.categories.length; i++) {
-                            that.category.actions.delete(that.user.categories[i]);
+                        if (confirm('Do you really want to delete?')) {
+                            for (var i = 0; i < that.user.categories.length; i++) {
+                                that.category.actions.delete(that.user.categories[i]);
+                            };
                         };
                     },
                     set: function(id, name) {
@@ -401,19 +378,30 @@
                         $http.get(that.tag.url).success(function(data) {that.tags = data;});
                     },
                     post: function() {
-                        $http.post(that.tag.url, that.tag.data).success(function(data) { alert('success'); });
+                        $http.post(that.tag.url, that.tag.data).success(
+                            function(data) {
+                                that.tag.actions.get();
+                                that.tag.actions.clear();
+                            });
                     },
                     put: function(id) {
-                        $http.put(that.tag.url + id + '/', that.tag.data).success(alert('success'));
+                        $http.put(that.tag.url + id + '/', that.tag.data).success(
+                            function() {
+                                that.tag.actions.get();
+                                that.tag.actions.clear();
+                            });
                     },
                     delete: function(id) {
-                        if (confirm('Do you really want to delete?')) {
-                            $http.delete(that.tag.url + id + '/');
-                        };
+                        $http.delete(that.tag.url + id + '/').success(function() {
+                            that.tag.actions.get();
+                            that.tag.actions.clear();
+                        });
                     },
-                    deleteCats: function() {
-                        for (var i = 0; i < that.user.tags.length; i++) {
-                            that.tag.actions.delete(that.user.tags[i]);
+                    deleteTags: function() {
+                        if (confirm('Do you really want to delete?')) {
+                            for (var i = 0; i < that.user.tags.length; i++) {
+                                that.tag.actions.delete(that.user.tags[i]);
+                            };
                         };
                     },
                     set: function(id, name) {
@@ -449,19 +437,31 @@
                         $http.get(that.note.url).success(function(data) {that.notes = data;});
                     },
                     post: function() {
-                        $http.post(that.note.url, that.note.data).success(function(data) { alert('success'); });
+                        $http.post(that.note.url, that.note.data).success(
+                            function(data) {
+                                that.note.actions.get();
+                                that.note.actions.clear();
+                            });
                     },
                     put: function(id) {
-                        $http.put(that.note.url + id + '/', that.note.data).success(alert('success'));
+                        $http.put(that.note.url + id + '/', that.note.data).success(
+                            function() {
+                                that.note.actions.get();
+                                that.note.actions.clear();
+                            });
                     },
                     delete: function(id) {
-                        if (confirm('Do you really want to delete?')) {
-                            $http.delete(that.note.url + id + '/');
-                        };
+                        $http.delete(that.note.url + id + '/').success(
+                            function() {
+                                that.note.actions.get();
+                                that.note.actions.clear();
+                            });
                     },
                     deleteNots: function() {
-                        for (var i = 0; i < that.user.notes.length; i++) {
-                            that.note.actions.delete(that.user.notes[i]);
+                        if (confirm('Do you really want to delete?')) {
+                            for (var i = 0; i < that.user.notes.length; i++) {
+                                that.note.actions.delete(that.user.notes[i]);
+                            };
                         };
                     },
                     set: function(data) {
@@ -506,39 +506,26 @@
                         $http.post(that.image.url, that.image.data).success(function(data) { alert('success'); });
                     },
                     delete: function(id) {
-                        if (confirm('Do you really want to delete?')) {
-                            $http.delete(that.image.url + id + '/');
-                        };
+                        $http.delete(that.image.url + id + '/').success(function() {
+                            that.image.actions.get();
+                        });
                     },
                     deleteImages: function() {
-                        for (var i = 0; i < that.user.images.length; i++) {
-                            that.image.actions.delete(that.user.images[i]);
+                        if (confirm('Do you really want to delete?')) {
+                            for (var i = 0; i < that.user.images.length; i++) {
+                                that.image.actions.delete(that.user.images[i]);
+                            };
                         };
                     },
                 }
             };
 
 
-            $http.get('/colors/').success(function(data) {
-                that.colors = data;
-            });
-            // $http.get('/tags/').success(function(data) {
-            //     that.tags = data;
-            // });
+            $http.get('/colors/').success(function(data) {that.colors = data;});
             this.tag.actions.get();
             this.category.actions.get();
-            $http.get('/notes/').success(function(data) {
-                that.notes = data;
-            });
-            $http.get('/images/').success(function(data) {
-                that.images = data;
-            });
-
-
-            this.test = function(some) {
-                alert(some);
-                console.log(some);
-            };
+            this.note.actions.get();
+            this.image.actions.get();
 
             this.getUrl = function(id) {
                 for (var i = 0; i < this.images.length; i++) {
