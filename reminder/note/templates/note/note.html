@@ -271,13 +271,11 @@
             <div ng-show="panel.isSelected(5)">
 
 
-                    <h1>Create Images</h1>
+                    <h1>Create Image</h1>
                     <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
                         <input type="text" name="title">
                         <input type="file" name="file">
-                        <button type="submit" class="btn btn-primary">
-                                Submit
-                        </button>
+                        <button type="submit" class="btn btn-primary" ng-click="note.image.actions.post()">Create</button>
                     </form>
 
 
@@ -301,7 +299,7 @@
                                 <div ng-show='note.images.length'>
                                     <tr ng-repeat='image in note.images'>
                                         <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
-                                        <td><a href ng-click="note.image.actions.set(image)">[[ image.title ]]</a></td>
+                                        <td>[[ image.title ]]</td>
                                         <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
                                         <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
                                     </tr>
@@ -497,11 +495,8 @@
                 id: '',
                 url: '/images/',
                 data: {
-                    name: '',
+                    title: '',
                     file: ''
-                },
-                helpText: {
-                    action: 'Create image',
                 },
                 actions: {
                     get: function() {
@@ -509,9 +504,6 @@
                     },
                     post: function() {
                         $http.post(that.image.url, that.image.data).success(function(data) { alert('success'); });
-                    },
-                    put: function(id) {
-                        $http.put(that.image.url + id + '/', that.image.data).success(alert('success'));
                     },
                     delete: function(id) {
                         if (confirm('Do you really want to delete?')) {
@@ -522,16 +514,6 @@
                         for (var i = 0; i < that.user.images.length; i++) {
                             that.image.actions.delete(that.user.images[i]);
                         };
-                    },
-                    set: function(id, name) {
-                        that.image.id = id;
-                        that.image.data.name = name;
-                        that.image.helpText.action = 'Change image ' + id;
-                    },
-                    clear: function() {
-                        that.image.id = '';
-                        that.image.data.name = '';
-                        that.image.helpText.action = 'Create image';
                     },
                 }
             };

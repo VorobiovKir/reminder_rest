@@ -11,6 +11,25 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import djcelery
+
+djcelery.setup_loader()
+
+BROKER_HOST = "localhost"
+BROKER_BACKEND = "redis"
+REDIS_PORT = 6379
+REDIS_HOST = "localhost"
+BROKER_USER = ""
+BROKER_PASSWORD = ""
+BROKER_VHOST = "0"
+REDIS_DB = 0
+REDIS_CONNECT_RETRY = True
+CELERY_SEND_EVENTS = True
+CELERY_RESULT_BACKEND = 'redis'
+CELERY_TASK_RESULT_EXPIRES = 10
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERY_ALWAYS_EAGER = False
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,6 +65,7 @@ INSTALLED_APPS = [
     'authorization',
     'rest_framework',
     'bootstrap3',
+    'djcelery',
 ]
 
 MIDDLEWARE_CLASSES = [
