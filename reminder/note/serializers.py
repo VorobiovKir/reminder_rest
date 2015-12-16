@@ -11,7 +11,7 @@ from .models import Notes, Tags, Categories, Colors, Images
 
 class TagsSerializer(serializers.ModelSerializer):
     # author = serializers.PrimaryKeyRelatedField(read_only=True)
-    author = serializers.ReadOnlyField(source='author.username')
+    # author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Tags

@@ -13,22 +13,30 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import djcelery
 
-djcelery.setup_loader()
+# djcelery.setup_loader()
 
-BROKER_HOST = "localhost"
-BROKER_BACKEND = "redis"
-REDIS_PORT = 6379
-REDIS_HOST = "localhost"
-BROKER_USER = ""
-BROKER_PASSWORD = ""
-BROKER_VHOST = "0"
-REDIS_DB = 0
-REDIS_CONNECT_RETRY = True
-CELERY_SEND_EVENTS = True
-CELERY_RESULT_BACKEND = 'redis'
-CELERY_TASK_RESULT_EXPIRES = 10
-CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-CELERY_ALWAYS_EAGER = False
+# BROKER_HOST = "localhost"
+# BROKER_BACKEND = "redis"
+# REDIS_PORT = 6379
+# REDIS_HOST = "localhost"
+# BROKER_USER = ""
+# BROKER_PASSWORD = ""
+# BROKER_VHOST = "0"
+# REDIS_DB = 0
+# REDIS_CONNECT_RETRY = True
+# CELERY_SEND_EVENTS = True
+# CELERY_RESULT_BACKEND = 'redis'
+# CELERY_TASK_RESULT_EXPIRES = 10
+# CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+# CELERY_ALWAYS_EAGER = False
+
+# CELERY STUFF
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

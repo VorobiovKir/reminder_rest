@@ -39,10 +39,9 @@
                 <li><a role="presentation" href ng-click="panel.selectTab(4);" ng-class="{ active: panel.isSelected(4) }">Categories</a></li>
                 <li><a role="presentation" href ng-click="panel.selectTab(5);" ng-class="{ active: panel.isSelected(5) }">Images</a></li>
             </ul>
-        <!-- PANEL END -->
+    <!-- PANEL END -->
 
         <div ng-controller='NoteController as note'>
-
             <div ng-show="panel.isSelected(1)">
                 <h1>Home page</h1>
                 <div class="row">
@@ -246,10 +245,11 @@
             <div ng-show="panel.isSelected(5)">
                 <h1>Create Image</h1>
                 <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="text" name="title" class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
+                    <input type="text" name="title" ng-model="note.image.data.title" class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
                     <input type="file" name="file" class="form-control" style="margin-bottom: 10px;">
                     <button type="submit" class="btn btn-primary" ng-click="note.image.actions.post()">Create</button>
                 </form>
+                   <!--  <button ng-click="note.test(note.image.data.title);">show</button> -->
                 <hr>
                 <div class="panel panel-info" ng-show='note.images.length'>
                     <div class="panel-heading">
@@ -302,6 +302,7 @@
 
             // USER's Actions
             this.user = {
+                id: '{{user.id}}',
                 categories: [],
                 tags: [],
                 notes: [],
@@ -369,6 +370,7 @@
                 url: '/tags/',
                 data: {
                     name: '',
+                    author: that.user.id,
                 },
                 helpText: {
                     action: 'Create tag',
@@ -533,6 +535,18 @@
                         return that.images[i].img_dir;
                     };
                 };
+            };
+
+            this.test = function(some) {
+                this.image.data.title = '';
+            };
+
+            this.clearAll = function() {
+                alert(21312);
+                // that.category.actions.clear();
+                // that.tag.actions.clear();
+                // that.note.actions.clear();
+                console.log(this.image);
             };
 
         })

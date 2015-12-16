@@ -81,16 +81,16 @@ class TagsList(generics.ListCreateAPIView):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
 
-    def get(self, request):
-        queryset = self.get_queryset()
-        serializer_class = TagsSerializer(queryset, many=True)
-        return Response(serializer_class.data)
+    # def get(self, request):
+    #     queryset = self.get_queryset()
+    #     serializer_class = TagsSerializer(queryset, many=True)
+    #     return Response(serializer_class.data)
 
-    def post(self, request, format=None):
-        serializer = TagsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-        return Response(status=status.HTTP_201_CREATED)
+    # def post(self, request, format=None):
+    #     serializer = TagsSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save(author=request.user)
+    #     return Response(status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return Tags.objects.filter(author=self.request.user)
@@ -203,6 +203,7 @@ class ImagesList(generics.ListCreateAPIView):
         serializer = ImagesSerializer(data={'img_dir': request.FILES.get('file'), 'title': request.POST.get('title')})
         # serializer = ImagesSerializer(data=request.data, files=request.FILES)
         if serializer.is_valid():
+
             serializer.save(author=request.user)
 
         # return Response(status=status.HTTP_201_CREATED).render()
