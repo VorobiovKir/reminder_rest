@@ -34,22 +34,22 @@ var NoteController = function($http) {
             post: function() {
                 $http.post(that.category.url, that.category.data).success(
                     function(data) {
-                        that.category.actions.get();
                         that.category.actions.clear();
+                        that.refreshPage();
                     });
             },
             put: function(id) {
                 $http.put(that.category.url + id + '/', that.category.data).success(
                     function() {
-                        that.category.actions.get();
                         that.category.actions.clear();
+                        that.refreshPage();
                     });
             },
             delete: function(id) {
                 $http.delete(that.category.url + id + '/').success(
                     function() {
-                        that.category.actions.get();
                         that.category.actions.clear();
+                        that.refreshPage();
                     });
             },
             deleteCats: function() {
@@ -90,20 +90,20 @@ var NoteController = function($http) {
             post: function() {
                 $http.post(that.tag.url, that.tag.data).success(
                     function(data) {
-                        that.tag.actions.get();
+                        that.refreshPage();
                         that.tag.actions.clear();
                     });
             },
             put: function(id) {
                 $http.put(that.tag.url + id + '/', that.tag.data).success(
                     function() {
-                        that.tag.actions.get();
+                        that.refreshPage();
                         that.tag.actions.clear();
                     });
             },
             delete: function(id) {
                 $http.delete(that.tag.url + id + '/').success(function() {
-                    that.tag.actions.get();
+                    that.refreshPage();
                     that.tag.actions.clear();
                 });
             },
@@ -150,21 +150,21 @@ var NoteController = function($http) {
             post: function() {
                 $http.post(that.note.url, that.note.data).success(
                     function(data) {
-                        that.note.actions.get();
+                        that.refreshPage();
                         that.note.actions.clear();
                     });
             },
             put: function(id) {
                 $http.put(that.note.url + id + '/', that.note.data).success(
                     function() {
-                        that.note.actions.get();
+                        that.refreshPage();
                         that.note.actions.clear();
                     });
             },
             delete: function(id) {
                 $http.delete(that.note.url + id + '/').success(
                     function() {
-                        that.note.actions.get();
+                        that.refreshPage();
                         that.note.actions.clear();
                     });
             },
@@ -183,7 +183,7 @@ var NoteController = function($http) {
                 that.note.data.tag = data.tag;
                 that.note.data.category = data.category;
                 that.note.data.image = data.image;
-                that.note.helpText.action = 'Change Note ' + that.note.data.id
+                that.note.helpText.action = 'Change Note ' + data.id;
             },
             clear: function() {
                 that.note.id = '';
@@ -228,23 +228,26 @@ var NoteController = function($http) {
         }
     };
 
+    this.refreshPage = function() {
+        this.tag.actions.get();
+        this.category.actions.get();
+        this.note.actions.get();
+        this.image.actions.get();
+    };
 
     $http.get('/colors/').success(function(data) {that.colors = data;});
-    this.tag.actions.get();
-    this.category.actions.get();
-    this.note.actions.get();
-    this.image.actions.get();
+    this.refreshPage();
 
-    this.getUrl = function(id) {
-        for (var i = 0; i < this.images.length; i++) {
-            if (that.images[i].id == id) {
-                return that.images[i].img_dir;
+    this.getObj = function(id, where) {
+        for (var i = 0; i < where.length; i++) {
+            if (where[i].id == id) {
+                return where[i];
             };
         };
     };
 
     this.test = function(some) {
-        this.image.data.title = '';
+        return some;
     };
 
     this.clearAll = function() {

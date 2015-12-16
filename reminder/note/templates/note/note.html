@@ -29,6 +29,31 @@
 
 {% block content %}
 
+    <style>
+
+    .main_page h1 {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-family: 'roboto', mono;
+        color: tomato;
+        font-size: 36px;
+        line-height: 42px;
+        text-transform: uppercase;
+        text-shadow: 0 2px white, 0 3px #777;
+    }
+
+    .my_notes {
+        margin: 1em 0 0.5em 0;
+        color: #343434;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 40px;
+        font-family: 'Orienta', sans-serif;
+    }
+
+    </style>
+
     <!-- PANEL START -->
     <div ng-app="MainApp" ng-cloak>
         <div class="menu" ng-controller="PanelController as panel">
@@ -42,7 +67,7 @@
     <!-- PANEL END -->
 
         <div ng-controller='NoteController as note'>
-            <div ng-show="panel.isSelected(1)">
+            <div ng-show="panel.isSelected(1)" class="main_page">
                 <h1>Home page</h1>
                 <div class="row">
                     <div class="left col-sm-3">
@@ -52,48 +77,54 @@
                         </div>
                         <ul style="list-style: none; font-size: 14px;" ng-repeat='category in note.categories'>
                             <li>
-                                <span class="glyphicon glyphicon-list-alt"></span> <a href="#">[[ category.name ]]</a>
+                                <span class="glyphicon glyphicon-list-alt"></span> <a href="#" ng-bind="category.name"></a>
                                 {# <span style="font-size: 10px; background-color:tomato;" class="badge">{{ node.notes_set.all|length }}</span> #}
                             </li>
                         </ul>
                     </div>
 
                     <div class="right col-sm-8 col-sm-offset-1">
-                        <h2>My Notes: </h2>
+                        <h2 class='my_notes'>My Notes: </h2>
                         <div ng-hide='note.notes.length'>
                             <h3 style="color: gray; margin-top: 50px;">Notes not found</h3>
                             <p>Click here to <a href ng-click="panel.selectTab(2)">add new note</a></p>
                         </div>
 
-                        <div ng-repeat='note in note.notes'>
+                        <div ng-repeat='localNote in note.notes'>
                             <p>
-                                <a  role="button" data-toggle="collapse" href="#[[ note.id ]]" aria-expanded="false" aria-controls="collapseExample">
-                                    <span ng-show='note.title'>
-                                        [[ note.title ]]
-                                    </span>
-                                    <span ng-show='!note.title'>
+                                <a  role="button" data-toggle="collapse" href="#[[ localNote.id ]]" aria-expanded="false" aria-controls="collapseExample">
+                                    <span ng-show='localNote.title' ng-bind="localNote.title"></span>
+                                    <span ng-show='!localNote.title'>
                                         no title
                                     </span>
                                 </a>
                             </p>
 
-                            <div class="collapse" id="[[ note.id ]]">
+                            <div class="collapse" id="[[ localNote.id ]]">
                                 <div class="well">
                                     <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
                                     <a href="#" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a>
+                                    <span style="width: 170px; height: 13px; background-color: [[note.getObj(localNote.color, note.colors).name]]; display: inline-block; float: right;"></span>
                                     <br>
-                                    <span style="background-color:[[ note.color ]]; width: 10px; height: 10px; display: inline-block;"></span>
-                                    [[ note.context ]]
-                                    <div ng-show='note.tag.length'>
-                                        <hr>
-                                        <span ng-repeat='tag in note.tag'>
-                                            <a href="#"><span class="glyphicon glyphicon glyphicon-tags"></span> [[ tag.name ]]</a>
+                                    {# <span style="background-color: [[note.getObj(localNote.color, note.colors).name]]; width: 10px; height: 10px; display: inline-block;"></span> #}
+                                    <p style="font-size: 16px; padding-top: 10px; text-indent: 5%;">[[ localNote.context ]]</p>
+                                    <br>
+                                    <div ng-show='localNote.tag.length'>
+                                        <span ng-repeat='tag in localNote.tag'>
+                                            <a href="#"><span class="glyphicon glyphicon glyphicon-tags"></span> [[ note.getObj(tag, note.tags).name ]]
+                                            </a>
                                         </span>
                                     </div>
-                                    <div ng-show='note.category.length'>
+                                    <div ng-show='localNote.category.length'>
+                                    adsfsdf
+                                        <span ng-repeat='category in localNote.category'>
+                                            <a href >@ [[ note.getObj(category, note.categories).name ]]</a>
+                                        </span>
+                                    </div>
+                                    <div ng-show='localNote.image.length'>
                                         <hr>
-                                        <span ng-repeat='category in note.category'>
-                                            <a href="#">@ [[ category.name ]]</a>
+                                        <span ng-repeat='img in localNote.image'>
+                                            <img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="25" alt="">
                                         </span>
                                     </div>
                                 </div>
@@ -105,7 +136,7 @@
 
             <hr>
 
-            <div ng-show="panel.isSelected(4)">
+            <div ng-show="panel.isSelected(4)" class="main_page">
                 <h1>[[ note.category.helpText.action ]]</h1>
                 <input type="text" name='title' value="[[ note.category.data.name ]]" class="form-control" placeholder="Name Category" ng-model="note.category.data.name" style="margin-bottom: 30px;" />
                 <button ng-hide="note.category.id" type="submit" class="btn btn-primary" class="col-md-4" ng-click='note.category.actions.post()'>Submit</button>
@@ -137,7 +168,7 @@
                 </div>
             </div>
 
-            <div ng-show="panel.isSelected(3)">
+            <div ng-show="panel.isSelected(3)" class="main_page">
                 <h1>[[ note.tag.helpText.action ]]</h1>
                 <input type="text" name='title' value="[[ note.tag.data.name ]]" ng-model="note.tag.data.name" class="form-control" style="margin-bottom: 30px;" placeholder="Name Tag" />
                 <button ng-hide="note.tag.id" type="submit" class="btn btn-primary" ng-click='note.tag.actions.post()'>Submit</button>
@@ -169,7 +200,7 @@
                 </div>
             </div>
 
-            <div ng-show="panel.isSelected(2)">
+            <div ng-show="panel.isSelected(2)" class="main_page">
                 <h1>[[ note.note.helpText.action ]]
                     <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
                     <span ng-show="note.note.id">
@@ -215,7 +246,7 @@
                 </div>
                 <div class="row">
                     <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-10">
-                        <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getUrl(img)]]" height="100" alt="" style="margin-bottom: 15px; margin-right:5px;"></span>
+                        <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="100" alt="" style="margin-bottom: 15px; margin-right:5px;"></span>
                     </div>
                 </div>
                 <hr>
@@ -242,7 +273,7 @@
                 </div>
             </div>
 
-            <div ng-show="panel.isSelected(5)">
+            <div ng-show="panel.isSelected(5)" class="main_page">
                 <h1>Create Image</h1>
                 <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
                     <input type="text" name="title" ng-model="note.image.data.title" class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
