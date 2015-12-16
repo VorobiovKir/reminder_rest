@@ -1,0 +1,257 @@
+var NoteController = function($http) {
+    var that = this;
+
+    this.colors = '';
+    this.tags = '';
+    this.categories = '';
+    this.notes = '';
+    this.images = '';
+
+    // USER's Actions
+    this.user = {
+        id: document.getElementById('user_id').textContent, // BAD WAY =(
+        categories: [],
+        tags: [],
+        notes: [],
+        images: []
+    };
+
+    // CATEGORY
+    this.category = {
+        id: '',
+        url: '/categories/',
+        data: {
+            name: '',
+            author: that.user.id,
+        },
+        helpText: {
+            action: 'Create Category',
+        },
+        actions: {
+            get: function() {
+                $http.get(that.category.url).success(function(data) {that.categories = data;});
+            },
+            post: function() {
+                $http.post(that.category.url, that.category.data).success(
+                    function(data) {
+                        that.category.actions.get();
+                        that.category.actions.clear();
+                    });
+            },
+            put: function(id) {
+                $http.put(that.category.url + id + '/', that.category.data).success(
+                    function() {
+                        that.category.actions.get();
+                        that.category.actions.clear();
+                    });
+            },
+            delete: function(id) {
+                $http.delete(that.category.url + id + '/').success(
+                    function() {
+                        that.category.actions.get();
+                        that.category.actions.clear();
+                    });
+            },
+            deleteCats: function() {
+                if (confirm('Do you really want to delete?')) {
+                    for (var i = 0; i < that.user.categories.length; i++) {
+                        that.category.actions.delete(that.user.categories[i]);
+                    };
+                };
+            },
+            set: function(id, name) {
+                that.category.id = id;
+                that.category.data.name = name;
+                that.category.helpText.action = 'Change Category ' + id;
+            },
+            clear: function() {
+                that.category.id = '';
+                that.category.data.name = '';
+                that.category.helpText.action = 'Create Category';
+            },
+        }
+    };
+
+    // TAG
+    this.tag = {
+        id: '',
+        url: '/tags/',
+        data: {
+            name: '',
+            author: that.user.id,
+        },
+        helpText: {
+            action: 'Create tag',
+        },
+        actions: {
+            get: function() {
+                $http.get(that.tag.url).success(function(data) {that.tags = data;});
+            },
+            post: function() {
+                $http.post(that.tag.url, that.tag.data).success(
+                    function(data) {
+                        that.tag.actions.get();
+                        that.tag.actions.clear();
+                    });
+            },
+            put: function(id) {
+                $http.put(that.tag.url + id + '/', that.tag.data).success(
+                    function() {
+                        that.tag.actions.get();
+                        that.tag.actions.clear();
+                    });
+            },
+            delete: function(id) {
+                $http.delete(that.tag.url + id + '/').success(function() {
+                    that.tag.actions.get();
+                    that.tag.actions.clear();
+                });
+            },
+            deleteTags: function() {
+                if (confirm('Do you really want to delete?')) {
+                    for (var i = 0; i < that.user.tags.length; i++) {
+                        that.tag.actions.delete(that.user.tags[i]);
+                    };
+                };
+            },
+            set: function(id, name) {
+                that.tag.id = id;
+                that.tag.data.name = name;
+                that.tag.helpText.action = 'Change tag ' + id;
+            },
+            clear: function() {
+                that.tag.id = '';
+                that.tag.data.name = '';
+                that.tag.helpText.action = 'Create tag';
+            },
+        }
+    };
+
+    // NOTE
+    this.note = {
+        id: '',
+        url: '/notes/',
+        data: {
+            author: that.user.id,
+            title: '',
+            context: '',
+            color: '',
+            tag: [],
+            category: [],
+            image: []
+        },
+        helpText: {
+            action: 'Create Note',
+        },
+        actions: {
+            get: function() {
+                $http.get(that.note.url).success(function(data) {that.notes = data;});
+            },
+            post: function() {
+                $http.post(that.note.url, that.note.data).success(
+                    function(data) {
+                        that.note.actions.get();
+                        that.note.actions.clear();
+                    });
+            },
+            put: function(id) {
+                $http.put(that.note.url + id + '/', that.note.data).success(
+                    function() {
+                        that.note.actions.get();
+                        that.note.actions.clear();
+                    });
+            },
+            delete: function(id) {
+                $http.delete(that.note.url + id + '/').success(
+                    function() {
+                        that.note.actions.get();
+                        that.note.actions.clear();
+                    });
+            },
+            deleteNots: function() {
+                if (confirm('Do you really want to delete?')) {
+                    for (var i = 0; i < that.user.notes.length; i++) {
+                        that.note.actions.delete(that.user.notes[i]);
+                    };
+                };
+            },
+            set: function(data) {
+                that.note.id = data.id;
+                that.note.data.title = data.title;
+                that.note.data.context = data.context;
+                that.note.data.color = data.color;
+                that.note.data.tag = data.tag;
+                that.note.data.category = data.category;
+                that.note.data.image = data.image;
+                that.note.helpText.action = 'Change Note ' + that.note.data.id
+            },
+            clear: function() {
+                that.note.id = '';
+                that.note.data.title = '';
+                that.note.data.context = '';
+                that.note.data.color = '';
+                that.note.data.tag = [];
+                that.note.data.category = [];
+                that.note.data.image = [];
+                that.note.helpText.action = 'Create Note';
+            },
+        }
+    };
+
+    // IMAGES
+    this.image = {
+        id: '',
+        url: '/images/',
+        data: {
+            title: '',
+            file: ''
+        },
+        actions: {
+            get: function() {
+                $http.get(that.image.url).success(function(data) {that.images = data;});
+            },
+            post: function() {
+                $http.post(that.image.url, that.image.data).success(function(data) { alert('success'); });
+            },
+            delete: function(id) {
+                $http.delete(that.image.url + id + '/').success(function() {
+                    that.image.actions.get();
+                });
+            },
+            deleteImages: function() {
+                if (confirm('Do you really want to delete?')) {
+                    for (var i = 0; i < that.user.images.length; i++) {
+                        that.image.actions.delete(that.user.images[i]);
+                    };
+                };
+            },
+        }
+    };
+
+
+    $http.get('/colors/').success(function(data) {that.colors = data;});
+    this.tag.actions.get();
+    this.category.actions.get();
+    this.note.actions.get();
+    this.image.actions.get();
+
+    this.getUrl = function(id) {
+        for (var i = 0; i < this.images.length; i++) {
+            if (that.images[i].id == id) {
+                return that.images[i].img_dir;
+            };
+        };
+    };
+
+    this.test = function(some) {
+        this.image.data.title = '';
+    };
+
+    this.clearAll = function() {
+        alert(21312);
+        // that.category.actions.clear();
+        // that.tag.actions.clear();
+        // that.note.actions.clear();
+        console.log(this.image);
+    };
+};
