@@ -315,6 +315,7 @@
                 url: '/categories/',
                 data: {
                     name: '',
+                    author: that.user.id,
                 },
                 helpText: {
                     action: 'Create Category',
@@ -424,6 +425,7 @@
                 id: '',
                 url: '/notes/',
                 data: {
+                    author: that.user.id,
                     title: '',
                     context: '',
                     color: '',
@@ -485,9 +487,6 @@
                         that.note.data.category = [];
                         that.note.data.image = [];
                         that.note.helpText.action = 'Create Note';
-                    },
-                    isSelect: function(id, array) {
-                        return array.indexOf(id) != -1 || false;
                     },
                 }
             };

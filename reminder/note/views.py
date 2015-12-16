@@ -16,19 +16,8 @@ from django.shortcuts import redirect
 
 @permission_classes((IsAuthenticated, ))
 class NotesList(generics.ListCreateAPIView):
-    # queryset = Notes.objects.all()
+    queryset = Notes.objects.all()
     serializer_class = NotesSerializer
-
-    def get(self, request):
-        queryset = self.get_queryset()
-        serializer_class = NotesSerializer(queryset, many=True)
-        return Response(serializer_class.data)
-
-    def post(self, request, format=None):
-        serializer = NotesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-        return Response(status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return Notes.objects.filter(author=self.request.user)
@@ -38,30 +27,6 @@ class NotesList(generics.ListCreateAPIView):
 class NotesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notes.objects.all()
     serializer_class = NotesSerializer
-
-    def get_object(self, pk, author):
-        try:
-            return Notes.objects.get(pk=pk, author=author)
-        except Notes.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        note = self.get_object(pk, request.user)
-        serializer = NotesSerializer(note)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        note = self.get_object(pk, request.user)
-        serializer = NotesSerializer(note, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        note = self.get_object(pk, request.user)
-        note.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @permission_classes((IsAuthenticated, ))
@@ -81,17 +46,6 @@ class TagsList(generics.ListCreateAPIView):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
 
-    # def get(self, request):
-    #     queryset = self.get_queryset()
-    #     serializer_class = TagsSerializer(queryset, many=True)
-    #     return Response(serializer_class.data)
-
-    # def post(self, request, format=None):
-    #     serializer = TagsSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save(author=request.user)
-    #     return Response(status=status.HTTP_201_CREATED)
-
     def get_queryset(self):
         return Tags.objects.filter(author=self.request.user)
 
@@ -101,46 +55,11 @@ class TagsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
 
-    def get_object(self, pk, author):
-        try:
-            return Tags.objects.get(pk=pk, author=author)
-        except Tags.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        tag = self.get_object(pk, request.user)
-        serializer = TagsSerializer(tag)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        tag = self.get_object(pk, request.user)
-        serializer = TagsSerializer(tag, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        tag = self.get_object(pk, request.user)
-        tag.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 @permission_classes((IsAuthenticated, ))
 class CategoriesList(generics.ListCreateAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-
-    def get(self, request):
-        queryset = self.get_queryset()
-        serializer_class = CategoriesSerializer(queryset, many=True)
-        return Response(serializer_class.data)
-
-    def post(self, request, format=None):
-        serializer = CategoriesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-        return Response(status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return Categories.objects.filter(author=self.request.user)
@@ -150,30 +69,6 @@ class CategoriesList(generics.ListCreateAPIView):
 class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-
-    def get_object(self, pk, author):
-        try:
-            return Categories.objects.get(pk=pk, author=author)
-        except Categories.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        category = self.get_object(pk, request.user)
-        serializer = CategoriesSerializer(category)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        category = self.get_object(pk, request.user)
-        serializer = CategoriesSerializer(category, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        category = self.get_object(pk, request.user)
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # For redirect if not Auth
@@ -194,16 +89,10 @@ class ImagesList(generics.ListCreateAPIView):
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
 
-    def get(self, request):
-        queryset = self.get_queryset()
-        serializer_class = ImagesSerializer(queryset, many=True)
-        return Response(serializer_class.data)
-
     def post(self, request, format=None):
         serializer = ImagesSerializer(data={'img_dir': request.FILES.get('file'), 'title': request.POST.get('title')})
         # serializer = ImagesSerializer(data=request.data, files=request.FILES)
         if serializer.is_valid():
-
             serializer.save(author=request.user)
 
         # return Response(status=status.HTTP_201_CREATED).render()
