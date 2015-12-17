@@ -66,249 +66,250 @@
             </ul>
     <!-- PANEL END -->
 
-        <div ng-controller='NoteController as note'>
-            <div ng-show="panel.isSelected(1)" class="main_page">
-                <h1>Home page</h1>
-                <div class="row">
-                    <div class="left col-sm-3">
-                        <div ng-hide='note.categories.length'>
-                            <h3 style="color: gray; margin-top: 50px;">Categories not found</h3>
-                            <p>Click here to <a href ng-click="panel.selectTab(4)">add new category</a></p>
-                        </div>
-                        <ul style="list-style: none; font-size: 14px;" ng-repeat='category in note.categories'>
-                            <li>
-                                <span class="glyphicon glyphicon-list-alt"></span> <a href="#" ng-bind="category.name"></a>
-                                {# <span style="font-size: 10px; background-color:tomato;" class="badge">{{ node.notes_set.all|length }}</span> #}
-                            </li>
-                        </ul>
-                    </div>
+            <div ng-controller='NoteController as note'>
 
-                    <div class="right col-sm-8 col-sm-offset-1">
-                        <h2 class='my_notes'>My Notes: </h2>
-                        <div ng-hide='note.notes.length'>
-                            <h3 style="color: gray; margin-top: 50px;">Notes not found</h3>
-                            <p>Click here to <a href ng-click="panel.selectTab(2)">add new note</a></p>
+                <div ng-show="panel.isSelected(1)" class="main_page">
+                    <h1>Home page</h1>
+                    <div class="row">
+                        <div class="left col-sm-3">
+                            <div ng-hide='note.categories.length'>
+                                <h3 style="color: gray; margin-top: 50px;">Categories not found</h3>
+                                <p>Click here to <a href ng-click="panel.selectTab(4)">add new category</a></p>
+                            </div>
+                            <ul style="list-style: none; font-size: 14px;" ng-repeat='category in note.categories'>
+                                <li>
+                                    <span class="glyphicon glyphicon-list-alt"></span> <a href="#" ng-bind="category.name"></a>
+                                    {# <span style="font-size: 10px; background-color:tomato;" class="badge">{{ node.notes_set.all|length }}</span> #}
+                                </li>
+                            </ul>
                         </div>
 
-                        <div ng-repeat='localNote in note.notes'>
-                            <p>
-                                <a  role="button" data-toggle="collapse" href="#[[ localNote.id ]]" aria-expanded="false" aria-controls="collapseExample">
-                                    <span ng-show='localNote.title' ng-bind="localNote.title"></span>
-                                    <span ng-show='!localNote.title'>
-                                        no title
-                                    </span>
-                                </a>
-                            </p>
+                        <div class="right col-sm-8 col-sm-offset-1">
+                            <h2 class='my_notes'>My Notes: </h2>
+                            <div ng-hide='note.notes.length'>
+                                <h3 style="color: gray; margin-top: 50px;">Notes not found</h3>
+                                <p>Click here to <a href ng-click="panel.selectTab(2)">add new note</a></p>
+                            </div>
 
-                            <div class="collapse" id="[[ localNote.id ]]">
-                                <div class="well">
-                                    <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
-                                    <a href="#" onclick="return confirm('Do you want to delete?');"><span class="glyphicon glyphicon-remove"></span></a>
-                                    <span style="width: 170px; height: 13px; background-color: [[note.getObj(localNote.color, note.colors).name]]; display: inline-block; float: right;"></span>
-                                    <br>
-                                    {# <span style="background-color: [[note.getObj(localNote.color, note.colors).name]]; width: 10px; height: 10px; display: inline-block;"></span> #}
-                                    <p style="font-size: 16px; padding-top: 10px; text-indent: 5%;">[[ localNote.context ]]</p>
-                                    <br>
-                                    <div ng-show='localNote.tag.length'>
-                                        <span ng-repeat='tag in localNote.tag'>
-                                            <a href="#"><span class="glyphicon glyphicon glyphicon-tags"></span> [[ note.getObj(tag, note.tags).name ]]
-                                            </a>
+                            <div ng-repeat='localNote in note.notes'>
+                                <p>
+                                    <a  role="button" data-toggle="collapse" href="#[[ localNote.id ]]" aria-expanded="false" aria-controls="collapseExample">
+                                        <span ng-show='localNote.title' ng-bind="localNote.title"></span>
+                                        <span ng-show='!localNote.title'>
+                                            no title
                                         </span>
-                                    </div>
-                                    <div ng-show='localNote.category.length'>
-                                    adsfsdf
-                                        <span ng-repeat='category in localNote.category'>
-                                            <a href >@ [[ note.getObj(category, note.categories).name ]]</a>
-                                        </span>
-                                    </div>
-                                    <div ng-show='localNote.image.length'>
-                                        <hr>
-                                        <span ng-repeat='img in localNote.image'>
-                                            <img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="25" alt="">
-                                        </span>
+                                    </a>
+                                </p>
+
+                                <div class="collapse" id="[[ localNote.id ]]">
+                                    <div class="well">
+                                        <a href ng-click="panel.selectTab(2); note.note.actions.set(localNote);"><span class="glyphicon glyphicon-edit"></span></a>
+                                        <a href ng-click="note.note.actions.delete(localNote.id)"><span class="glyphicon glyphicon-remove"></span></a>
+                                        <span style="width: 170px; height: 13px; background-color: [[note.getObj(localNote.color, note.colors).name]]; display: inline-block; float: right;"></span>
+                                        <br>
+                                        {# <span style="background-color: [[note.getObj(localNote.color, note.colors).name]]; width: 10px; height: 10px; display: inline-block;"></span> #}
+                                        <p style="font-size: 16px; padding-top: 10px; text-indent: 5%;" ng-bind="localNote.context"></p>
+                                        <br>
+                                        <div ng-show='localNote.tag.length'>
+                                            <span ng-repeat='tag in localNote.tag'>
+                                                <a href="#">
+                                                    <span class="glyphicon glyphicon glyphicon-tags"></span>
+                                                    <span ng-bind="note.getObj(tag, note.tags).name"></span>
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div ng-show='localNote.category.length'>
+                                            <span ng-repeat='category in localNote.category'>
+                                                <a href >@ <span ng-bind="note.getObj(category, note.categories).name"></span></a>
+                                            </span>
+                                        </div>
+                                        <div ng-show='localNote.image.length'>
+                                            <hr>
+                                            <span ng-repeat='img in localNote.image'>
+                                                <img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="25" alt="">
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <hr>
-
-            <div ng-show="panel.isSelected(4)" class="main_page">
-                <h1>[[ note.category.helpText.action ]]</h1>
-                <input type="text" name='title' value="[[ note.category.data.name ]]" class="form-control" placeholder="Name Category" ng-model="note.category.data.name" style="margin-bottom: 30px;" />
-                <button ng-hide="note.category.id" type="submit" class="btn btn-primary" class="col-md-4" ng-click='note.category.actions.post()'>Submit</button>
-                <span ng-show="note.category.id">
-                    <button type="submit" class="btn btn-primary" ng-click='note.category.actions.put([[note.category.id]])'>Change</button>
-                    <button type="submit" class="btn btn-primary" ng-click='note.category.actions.clear()'>Cancel</button>
-                </span>
-                <hr>
-                <div class="panel panel-info" ng-show='note.categories.length'>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Your Categories:</h3>
-                    </div>
-                    <a href class="btn btn-primary pull-right" ng-click="note.category.actions.deleteCats();" style="margin-top:10px; margin-right:10px;">Delete</a>
-                    <table class="table table-hover">
-                        <thead style="font-weight: bold;">
-                            <tr>
-                                <td>#</td>
-                                <td>Name</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat='category in note.categories'>
-                                <td><input type="checkbox" checklist-model="note.user.categories" checklist-value="category.id"></td>
-                                <td><a href ng-click='note.category.actions.set([[category.id]], [[category.name]])'>[[category.name]]</a></td>
-                                <td><a href="" ng-click='note.category.actions.delete([[category.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div ng-show="panel.isSelected(3)" class="main_page">
-                <h1>[[ note.tag.helpText.action ]]</h1>
-                <input type="text" name='title' value="[[ note.tag.data.name ]]" ng-model="note.tag.data.name" class="form-control" style="margin-bottom: 30px;" placeholder="Name Tag" />
-                <button ng-hide="note.tag.id" type="submit" class="btn btn-primary" ng-click='note.tag.actions.post()'>Submit</button>
-                <span ng-show="note.tag.id">
-                    <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.put([[note.tag.id]])'>Change</button>
-                    <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.clear()'>Cancel</button>
-                </span>
-                <hr>
-                <div class="panel panel-info" ng-show='note.tags.length'>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Your Tags:</h3>
-                    </div>
-                    <a href class="btn btn-primary pull-right" ng-click="note.tag.actions.deleteTags();" style="margin-top:10px; margin-right:10px;">Delete</a>
-                    <table class="table table-hover">
-                        <thead style="font-weight: bold;">
-                            <tr>
-                                <td>#</td>
-                                <td>Name</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat='tag in note.tags'>
-                                <td><input type="checkbox" checklist-model="note.user.tags" checklist-value="tag.id"></td>
-                                <td><a href ng-click='note.tag.actions.set([[tag.id]], [[tag.name]])'>[[tag.name]]</a></td>
-                                <td><a href="" ng-click='note.tag.actions.delete([[tag.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div ng-show="panel.isSelected(2)" class="main_page">
-                <h1>[[ note.note.helpText.action ]]
-                    <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
-                    <span ng-show="note.note.id">
-                        <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.note.id]])'>Change</button>
-                        <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
+                <div ng-show="panel.isSelected(4)" class="main_page">
+                    <h1 ng-bind="note.category.helpText.action"></h1>
+                    <input type="text" name='title' value="[[ note.category.data.name ]]" class="form-control" placeholder="Name Category" ng-model="note.category.data.name" style="margin-bottom: 30px;" />
+                    <button ng-hide="note.category.id" type="submit" class="btn btn-primary" class="col-md-4" ng-click='note.category.actions.post()'>Submit</button>
+                    <span ng-show="note.category.id">
+                        <button type="submit" class="btn btn-primary" ng-click='note.category.actions.put([[note.category.id]])'>Change</button>
+                        <button type="submit" class="btn btn-primary" ng-click='note.category.actions.clear()'>Cancel</button>
                     </span>
-                </h1>
-                <div class="form-group">
-                    <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
-                    <div class="col-sm-10">
-                      <input type="text" ng-model="note.note.data.title" class="form-control" id="inputTitle" placeholder="Title" style="margin-bottom: 15px;">
+                    <hr>
+                    <div class="panel panel-info" ng-show='note.categories.length'>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your Categories:</h3>
+                        </div>
+                        <a href class="btn btn-primary pull-right" ng-click="note.category.actions.deleteCats();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat='category in note.categories'>
+                                    <td><input type="checkbox" checklist-model="note.user.categories" checklist-value="category.id"></td>
+                                    <td><a href ng-click='note.category.actions.set([[category.id]], [[category.name]])' ng-bind="category.name"></a></td>
+                                    <td><a href="" ng-click='note.category.actions.delete([[category.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputContext" class="col-sm-offset-1 col-sm-1 control-label">Context</label>
-                    <div class="col-sm-10">
-                        <textarea name="context" ng-model="note.note.data.context" id="inputContext" class="form-control" rows="5" placeholder="Context" style="margin-bottom: 15px;"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="inputColor" ng-model="note.note.data.color" ng-options="c.id as c.name for c in note.colors" style="margin-bottom: 15px;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
-                    <div class="col-sm-10">
-                        <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag" ng-options="t.id as t.name for t in note.tags" style="margin-bottom: 15px;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
-                    <div class="col-sm-10">
-                        <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category" ng-options="c.id as c.name for c in note.categories" style="margin-bottom: 15px;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
-                    <div class="col-sm-10">
-                        <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image" ng-options="i.id as i.title for i in note.images" style="margin-bottom: 15px;"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-10">
-                        <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="100" alt="" style="margin-bottom: 15px; margin-right:5px;"></span>
-                    </div>
-                </div>
-                <hr>
-                <div class="panel panel-info" ng-show='note.notes.length'>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Your Notes:</h3>
-                    </div>
-                    <a href class="btn btn-primary pull-right" ng-click="note.note.actions.deleteNots();" style="margin-top:10px; margin-right:10px;">Delete</a>
-                    <table class="table table-hover">
-                        <thead style="font-weight: bold;">
-                            <tr>
-                                <td>#</td>
-                                <td>Name</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat='localNote in note.notes'>
-                                <td><input type="checkbox" checklist-model="note.user.notes" checklist-value="localNote.id"></td>
-                                <td><a href ng-click="note.note.actions.set(localNote)"> [[localNote.title]]</a></td>
-                                <td><a href="" ng-click="note.note.actions.delete([[localNote.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <div ng-show="panel.isSelected(5)" class="main_page">
-                <h1>Create Image</h1>
-                <form action="/images/" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="text" name="title" ng-model="note.image.data.title" class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
-                    <input type="file" name="file" class="form-control" style="margin-bottom: 10px;">
-                    <button type="submit" class="btn btn-primary" ng-click="note.image.actions.post()">Create</button>
-                </form>
-                   <!--  <button ng-click="note.test(note.image.data.title);">show</button> -->
-                <hr>
-                <div class="panel panel-info" ng-show='note.images.length'>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Your Images:</h3>
+                <div ng-show="panel.isSelected(3)" class="main_page">
+                    <h1 ng-bind="note.tag.helpText.action"></h1>
+                    <input type="text" name='title' value="[[ note.tag.data.name ]]" ng-model="note.tag.data.name" class="form-control" style="margin-bottom: 30px;" placeholder="Name Tag" />
+                    <button ng-hide="note.tag.id" type="submit" class="btn btn-primary" ng-click='note.tag.actions.post()'>Submit</button>
+                    <span ng-show="note.tag.id">
+                        <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.put([[note.tag.id]])'>Change</button>
+                        <button type="submit" class="btn btn-primary" ng-click='note.tag.actions.clear()'>Cancel</button>
+                    </span>
+                    <hr>
+                    <div class="panel panel-info" ng-show='note.tags.length'>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your Tags:</h3>
+                        </div>
+                        <a href class="btn btn-primary pull-right" ng-click="note.tag.actions.deleteTags();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat='tag in note.tags'>
+                                    <td><input type="checkbox" checklist-model="note.user.tags" checklist-value="tag.id"></td>
+                                    <td><a href ng-click='note.tag.actions.set([[tag.id]], [[tag.name]])' ng-bind="tag.name"></a></td>
+                                    <td><a href="" ng-click='note.tag.actions.delete([[tag.id]])'><span class="glyphicon glyphicon-remove"></span></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <a href class="btn btn-primary pull-right" ng-click="note.image.actions.deleteImages();" style="margin-top:10px; margin-right:10px;">Delete</a>
-                    <table class="table table-hover">
-                        <thead style="font-weight: bold;">
-                            <tr>
-                                <td>#</td>
-                                <td>Name</td>
-                                <td>Image</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat='image in note.images'>
-                                <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
-                                <td>[[ image.title ]]</td>
-                                <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
-                                <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-            </div>
 
+                <div ng-show="panel.isSelected(2)" class="main_page">
+                    <h1>[[ note.note.helpText.action ]]
+                        <button type="submit" ng-hide="note.note.id" class="btn btn-primary" ng-click="note.note.actions.post()">Submit</button>
+                        <span ng-show="note.note.id">
+                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.put([[note.note.id]])'>Change</button>
+                            <button type="submit" class="btn btn-primary" ng-click='note.note.actions.clear()'>Cancel</button>
+                        </span>
+                    </h1>
+                    <div class="form-group">
+                        <label for="inputTitle" class="col-sm-offset-1 col-sm-1 control-label">Title</label>
+                        <div class="col-sm-10">
+                          <input type="text" ng-model="note.note.data.title" class="form-control" id="inputTitle" placeholder="Title" style="margin-bottom: 15px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputContext" class="col-sm-offset-1 col-sm-1 control-label">Context</label>
+                        <div class="col-sm-10">
+                            <textarea name="context" ng-model="note.note.data.context" id="inputContext" class="form-control" rows="5" placeholder="Context" style="margin-bottom: 15px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputColor" class="col-sm-offset-1 col-sm-1 control-label">Colors</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="inputColor" ng-model="note.note.data.color" ng-options="c.id as c.name for c in note.colors" style="margin-bottom: 15px;"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTag" class="col-sm-offset-1 col-sm-1 control-label">Tags</label>
+                        <div class="col-sm-10">
+                            <select multiple class="form-control" id="inputTag" ng-model="note.note.data.tag" ng-options="t.id as t.name for t in note.tags" style="margin-bottom: 15px;"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputCateg" class="col-sm-offset-1 col-sm-1 control-label">Categories</label>
+                        <div class="col-sm-10">
+                            <select multiple class="form-control" id="inputCateg" ng-model="note.note.data.category" ng-options="c.id as c.name for c in note.categories" style="margin-bottom: 15px;"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputImag" class="col-sm-offset-1 col-sm-1 control-label">Images</label>
+                        <div class="col-sm-10">
+                            <select multiple class="form-control" id="inputImag" ng-model="note.note.data.image" ng-options="i.id as i.title for i in note.images" style="margin-bottom: 15px;"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div ng-show="note.note.data.image.length" class="col-sm-offset-2 col-sm-10">
+                            <span ng-repeat="img in note.note.data.image"><img ng-src="[[note.getObj(img, note.images ).img_dir]]" height="100" alt="" style="margin-bottom: 15px; margin-right:5px;"></span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="panel panel-info" ng-show='note.notes.length'>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your Notes:</h3>
+                        </div>
+                        <a href class="btn btn-primary pull-right" ng-click="note.note.actions.deleteNots();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat='localNote in note.notes'>
+                                    <td><input type="checkbox" checklist-model="note.user.notes" checklist-value="localNote.id"></td>
+                                    <td><a href ng-click="note.note.actions.set(localNote)" ng-bind="localNote.title"></a></td>
+                                    <td><a href="" ng-click="note.note.actions.delete([[localNote.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div ng-show="panel.isSelected(5)" class="main_page">
+                    <h1>Create Image</h1>
+                    <form id="FormId" enctype="multipart/form-data">
+                        <input type="text" ng-model="note.image.data.title" name='title' class="form-control" placeholder="Name Image" style="margin-bottom: 10px;">
+                        <input type="file" ng-model="note.image.data.file" name="file" id="id_select_file" class="form-control" style="margin-bottom: 10px;">
+                        <a href ng-click="note.image.actions.post()" class="btn btn-primary">Create</a>
+                    </form>
+
+                       <!--  <button ng-click="note.test(note.image.data.title);">show</button> -->
+                    <hr>
+                    <div class="panel panel-info" ng-show='note.images.length'>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your Images:</h3>
+                        </div>
+                        <a href class="btn btn-primary pull-right" ng-click="note.image.actions.deleteImages();" style="margin-top:10px; margin-right:10px;">Delete</a>
+                        <table class="table table-hover">
+                            <thead style="font-weight: bold;">
+                                <tr>
+                                    <td>#</td>
+                                    <td>Name</td>
+                                    <td>Image</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat='image in note.images'>
+                                    <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
+                                    <td ng-bind="image.title"></td>
+                                    <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
+                                    <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
     </div>
 
 {% endblock %}
