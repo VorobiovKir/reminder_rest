@@ -1,10 +1,16 @@
 from celery.registry import tasks
 from celery.task import Task
+from celery.decorators import task
 
 
-class SingUpTask(Task):
+@task()
+def saveImage(serializer):
+    print serializer
 
-    def run(self):
-        print 'Its work!'
+# class SingUpTask(Task):
 
-tasks.register(SingUpTask)
+#     def run(self, serializer):
+#         print serializer
+
+# tasks.register(SingUpTask)
+tasks.register(saveImage)

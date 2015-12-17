@@ -3,16 +3,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 
 from .models import Notes, Colors, Tags, Categories, Images
 from .serializers import NotesSerializer, ColorsSerializer
 from .serializers import TagsSerializer, CategoriesSerializer, ImagesSerializer
-from .tasks import SingUpTask
+from .tasks import saveImage
 
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
+from django.core.files import uploadedfile
 
 
 @permission_classes((IsAuthenticated, ))
@@ -90,24 +92,48 @@ class ImagesList(generics.ListCreateAPIView):
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
 
+    # def post(self, request, format=None):
+        # data1 = {
+        #     'img_dir': request.FILES['select_file'],
+        #     'title': request.POST['title'],
+        #     'author': request.user.id
+        # }
+    #     # SingUpTask.delay(data)
+    #     serializer = ImagesSerializer(
+    #         data={
+    #             'img_dir': request.FILES['select_file'],
+    #             'title': request.POST['title'],
+    #             'author': request.user.id
+    #         })
+    #     # # serializer = ImagesSerializer(data=request.data, files=request.FILES)
+    #     if serializer.is_valid():
+    #         # SingUpTask.delay(data)
+    #         serializer.save()
+
+    #     redirect('/')
+    #     # return Response(status=status.HTTP_201_CREATED).render()
+
     def post(self, request, format=None):
-        print request.FILES['select_file']
-        serializer = ImagesSerializer(
-            data={
-                'img_dir': request.FILES['select_file'],
-                'title': request.POST['title'],
-                'author': request.user.id
-            })
-        # serializer = ImagesSerializer(data=request.data, files=request.FILES)
+        data = {
+            'img_dir': request.FILES['select_file'],
+            'title': request.POST['title'],
+            'author': request.user.id
+        }
+
+        serializer = ImagesSerializer(data=data)
         if serializer.is_valid():
-            SingUpTask.delay()
+            print serializer.validated_data
+            json = JSONRenderer().render(serializer.data)
+            saveImage.delay(json)
             serializer.save()
-            print 'SUCCESS'
         else:
             print serializer.errors
+            # saveImage.delay(args=(serializer, ))
+            # print serializer
+            # SingUpTask.delay(args=(request.FILES['select_file'],))
+            # SingUpTask.delay(data['img_dir'])
 
-        # return Response(status=status.HTTP_201_CREATED).render()
-        return redirect('/')
+        return Response(status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return Images.objects.filter(author=self.request.user)
