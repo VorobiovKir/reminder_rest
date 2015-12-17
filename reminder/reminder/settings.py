@@ -164,6 +164,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "authorization/static"),
+    os.path.join(BASE_DIR, "note/static"),
     os.path.join(BASE_DIR, "static"),
 )
 

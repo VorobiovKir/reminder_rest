@@ -89,27 +89,6 @@ class ImagesList(generics.ListCreateAPIView):
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
 
-    # def post(self, request, format=None):
-        # data1 = {
-        #     'img_dir': request.FILES['select_file'],
-        #     'title': request.POST['title'],
-        #     'author': request.user.id
-        # }
-    #     # SingUpTask.delay(data)
-    #     serializer = ImagesSerializer(
-    #         data={
-    #             'img_dir': request.FILES['select_file'],
-    #             'title': request.POST['title'],
-    #             'author': request.user.id
-    #         })
-    #     # # serializer = ImagesSerializer(data=request.data, files=request.FILES)
-    #     if serializer.is_valid():
-    #         # SingUpTask.delay(data)
-    #         serializer.save()
-
-    #     redirect('/')
-    #     # return Response(status=status.HTTP_201_CREATED).render()
-
     def post(self, request, format=None):
         data = {
             'img_dir': request.FILES['select_file'],

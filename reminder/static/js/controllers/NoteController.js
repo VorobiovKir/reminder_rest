@@ -273,4 +273,16 @@ var NoteController = function($http) {
         return url.split('/').pop();
     }
 
+    // this.showCategory = function(id) {
+    //     that.note.actions.get();
+    //     var res = []
+    //     for (var i = 0; i < that.notes.length; i++) {
+    //         if (that.notes[i].category == id) {
+    //             res.push(that.notes[i]);
+    //         }
+    //     }
+    //     that.notes = res;
+    // }
+    // this.showCategory(14);
+
 };
