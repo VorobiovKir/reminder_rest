@@ -229,6 +229,7 @@ var NoteController = function($http) {
                 }).success(function(data, status, headers, config) {
                     that.refreshPage();
                     that.image.actions.clear()
+                    $('#id_select_file').val(null);
                 })
             },
             delete: function(id) {
@@ -266,46 +267,6 @@ var NoteController = function($http) {
                 return where[i];
             };
         };
-    };
-
-    this.test = function(some) {
-        alert(some);
-    };
-
-    this.clearAll = function() {
-        alert(21312);
-        // that.category.actions.clear();
-        // that.tag.actions.clear();
-        // that.note.actions.clear();
-        console.log(this.image);
-    };
-
-    this.submitImg = function(){
-        var fd = new FormData();
-        datas = $("#FormId").serializeArray();
-        // send other data in the form
-        for (var i = 0; i < datas.length; i++) {
-            fd.append(datas[i].name, datas[i].value);
-        }
-        // append file to FormData
-        fd.append("select_file", $("#id_select_file")[0].files[0])
-        // for sending manual values
-        fd.append("type", "edit");
-        url = "/images/";
-
-        $http.post(url, fd, {
-            headers: {'Content-Type': undefined },
-            transformRequest: angular.identity
-        }).success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            alert('success');
-        }).
-        error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            alert('errors');
-        });
     };
 
 };

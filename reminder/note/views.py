@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Notes, Colors, Tags, Categories, Images
 from .serializers import NotesSerializer, ColorsSerializer
 from .serializers import TagsSerializer, CategoriesSerializer, ImagesSerializer
+from .tasks import SingUpTask
 
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
@@ -99,7 +100,7 @@ class ImagesList(generics.ListCreateAPIView):
             })
         # serializer = ImagesSerializer(data=request.data, files=request.FILES)
         if serializer.is_valid():
-            # test.delay(request.FILES, request.POST)
+            SingUpTask.delay()
             serializer.save()
             print 'SUCCESS'
         else:
