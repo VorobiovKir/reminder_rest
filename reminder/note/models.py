@@ -29,11 +29,12 @@ class Categories(models.Model):
 
 class Images(models.Model):
     title = models.CharField(max_length=64)
+    author = models.ForeignKey('auth.User')
     img_dir = models.ImageField(
         editable=True,
         help_text="Note Picture",
+        upload_to='origin/'
     )
-    author = models.ForeignKey('auth.User')
 
     def __unicode__(self):
         return self.title

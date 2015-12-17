@@ -297,7 +297,7 @@
                                 <tr ng-repeat='image in note.images'>
                                     <td><input type="checkbox" checklist-model="note.user.images" checklist-value="image.id"></td>
                                     <td ng-bind="image.title"></td>
-                                    <td><img ng-src="{{ MEDIA_URL }}[[image.img_dir]]" alt="" width='25'></td>
+                                    <td><img ng-src="{{ MEDIA_URL }}media/thumbnail/[[note.getNameFromUrl(image.img_dir)]]" alt=""></td>
                                     <td><a href ng-click="note.image.actions.delete([[image.id]])"><span class="glyphicon glyphicon-remove"></span></a></td>
                                 </tr>
                             </tbody>

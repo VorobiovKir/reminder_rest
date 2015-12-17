@@ -3,18 +3,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer
 
 from .models import Notes, Colors, Tags, Categories, Images
 from .serializers import NotesSerializer, ColorsSerializer
 from .serializers import TagsSerializer, CategoriesSerializer, ImagesSerializer
-from .tasks import saveImage
+from .tasks import to_thumbnail
 
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from django.shortcuts import redirect
-from django.core.files import uploadedfile
 
 
 @permission_classes((IsAuthenticated, ))
@@ -122,16 +119,8 @@ class ImagesList(generics.ListCreateAPIView):
 
         serializer = ImagesSerializer(data=data)
         if serializer.is_valid():
-            print serializer.validated_data
-            json = JSONRenderer().render(serializer.data)
-            saveImage.delay(json)
+            to_thumbnail.delay(str(serializer.validated_data['img_dir']))
             serializer.save()
-        else:
-            print serializer.errors
-            # saveImage.delay(args=(serializer, ))
-            # print serializer
-            # SingUpTask.delay(args=(request.FILES['select_file'],))
-            # SingUpTask.delay(data['img_dir'])
 
         return Response(status=status.HTTP_201_CREATED)
 

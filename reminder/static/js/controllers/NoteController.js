@@ -269,4 +269,8 @@ var NoteController = function($http) {
         };
     };
 
+    this.getNameFromUrl = function(url) {
+        return url.split('/').pop();
+    }
+
 };
