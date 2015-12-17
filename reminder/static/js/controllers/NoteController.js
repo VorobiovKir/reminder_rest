@@ -210,26 +210,8 @@ var NoteController = function($http) {
             get: function() {
                 $http.get(that.image.url).success(function(data) {that.images = data;});
             },
-            post: function(){
-                var fd = new FormData();
-                datas = $("#FormId").serializeArray();
-                // send other data in the form
-                for (var i = 0; i < datas.length; i++) {
-                    fd.append(datas[i].name, datas[i].value);
-                }
-                // append file to FormData
-                fd.append("select_file", $("#id_select_file")[0].files[0])
-                // for sending manual values
-                fd.append("type", "edit");
-                url = that.image.url;
-
-                $http.post(url, fd, {
-                    headers: {'Content-Type': undefined },
-                    transformRequest: angular.identity
-                }).success(function(data, status, headers, config) {
-                    that.refreshPage();
-                    that.image.actions.clear()
-                })
+            post: function() {
+                $http.post(that.image.url, that.image.data).success(function(data) { alert('success'); });
             },
             delete: function(id) {
                 $http.delete(that.image.url + id + '/').success(function() {
@@ -242,10 +224,6 @@ var NoteController = function($http) {
                         that.image.actions.delete(that.user.images[i]);
                     };
                 };
-            },
-            clear: function() {
-                that.image.data.title = '',
-                that.image.data.file = ''
             },
         }
     };
@@ -269,7 +247,7 @@ var NoteController = function($http) {
     };
 
     this.test = function(some) {
-        alert(some);
+        return some;
     };
 
     this.clearAll = function() {
@@ -279,33 +257,4 @@ var NoteController = function($http) {
         // that.note.actions.clear();
         console.log(this.image);
     };
-
-    this.submitImg = function(){
-        var fd = new FormData();
-        datas = $("#FormId").serializeArray();
-        // send other data in the form
-        for (var i = 0; i < datas.length; i++) {
-            fd.append(datas[i].name, datas[i].value);
-        }
-        // append file to FormData
-        fd.append("select_file", $("#id_select_file")[0].files[0])
-        // for sending manual values
-        fd.append("type", "edit");
-        url = "/images/";
-
-        $http.post(url, fd, {
-            headers: {'Content-Type': undefined },
-            transformRequest: angular.identity
-        }).success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            alert('success');
-        }).
-        error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            alert('errors');
-        });
-    };
-
 };

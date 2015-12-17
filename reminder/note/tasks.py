@@ -1,9 +1,18 @@
 from __future__ import absolute_import
-from reminder.celery import app
-from celery.registry import tasks
+import os
+from celery import Celery
+from django.conf import settings
 
-@app.task
-def test(param):
-    print 'Hello'
 
-tasks.register(test)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'reminder.settings')
+app = Celery('reminder')
+
+# Using a string here means the worker will not have to
+# pickle the object when using Windows.
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+
+
+@app.task(bind=True)
+def test():
+    print 'It\'s works!'
