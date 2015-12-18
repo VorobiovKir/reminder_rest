@@ -13,7 +13,7 @@ class Colors(models.Model):
 
 class Tags(models.Model):
     name = models.CharField(max_length=40)
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', blank=True)
 
     def __unicode__(self):
         return self.name
@@ -21,7 +21,7 @@ class Tags(models.Model):
 
 class Categories(models.Model):
     name = models.CharField(max_length=100)
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', blank=True)
 
     def __unicode__(self):
         return self.name
@@ -29,7 +29,7 @@ class Categories(models.Model):
 
 class Images(models.Model):
     title = models.CharField(max_length=64)
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', blank=True)
     img_dir = models.ImageField(
         editable=True,
         help_text="Note Picture",
@@ -48,7 +48,7 @@ class Notes(models.Model):
     tag = models.ManyToManyField(Tags, blank=True)
     category = models.ManyToManyField(Categories, blank=True)
     image = models.ManyToManyField(Images, blank=True)
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', blank=True)
 
     def __unicode__(self):
         return self.title

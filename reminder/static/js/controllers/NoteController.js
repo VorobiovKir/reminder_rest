@@ -9,7 +9,6 @@ var NoteController = function($http) {
 
     // USER's Actions
     this.user = {
-        id: document.getElementById('user_id').textContent, // BAD WAY =(
         categories: [],
         tags: [],
         notes: [],
@@ -22,7 +21,6 @@ var NoteController = function($http) {
         url: '/categories/',
         data: {
             name: '',
-            author: that.user.id,
         },
         helpText: {
             action: 'Create Category',
@@ -78,7 +76,6 @@ var NoteController = function($http) {
         url: '/tags/',
         data: {
             name: '',
-            author: that.user.id,
         },
         helpText: {
             action: 'Create tag',
@@ -132,7 +129,6 @@ var NoteController = function($http) {
         id: '',
         url: '/notes/',
         data: {
-            author: that.user.id,
             title: '',
             context: '',
             color: '',

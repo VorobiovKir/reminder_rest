@@ -18,6 +18,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from reminder import settings
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('authorization.urls', namespace='author')),

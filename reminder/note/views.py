@@ -9,7 +9,6 @@ from .serializers import NotesSerializer, ColorsSerializer
 from .serializers import TagsSerializer, CategoriesSerializer, ImagesSerializer
 from .tasks import to_thumbnail
 
-from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 
@@ -21,6 +20,9 @@ class NotesList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Notes.objects.filter(author=self.request.user)
+
+    def perform_create(self, serializer_class):
+        serializer_class.save(author=self.request.user)
 
 
 @permission_classes((IsAuthenticated, ))
@@ -46,6 +48,9 @@ class TagsList(generics.ListCreateAPIView):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
 
+    def perform_create(self, serializer_class):
+        serializer_class.save(author=self.request.user)
+
     def get_queryset(self):
         return Tags.objects.filter(author=self.request.user)
 
@@ -64,6 +69,9 @@ class CategoriesList(generics.ListCreateAPIView):
     def get_queryset(self):
         return Categories.objects.filter(author=self.request.user)
 
+    def perform_create(self, serializer_class):
+        serializer_class.save(author=self.request.user)
+
 
 @permission_classes((IsAuthenticated, ))
 class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -73,7 +81,6 @@ class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # For redirect if not Auth
 class LoginRequiredMixin(object):
-
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
@@ -97,7 +104,7 @@ class ImagesList(generics.ListCreateAPIView):
         }
 
         serializer = ImagesSerializer(data=data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             to_thumbnail.delay(str(serializer.validated_data['img_dir']))
             serializer.save()
 
@@ -112,26 +119,5 @@ class ImagesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
 
-    def get_object(self, pk, author):
-        try:
-            return Images.objects.get(pk=pk, author=author)
-        except Images.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        image = self.get_object(pk, request.user)
-        serializer = ImagesSerializer(image)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        image = self.get_object(pk, request.user)
-        serializer = ImagesSerializer(image, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        image = self.get_object(pk, request.user)
-        image.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return Images.objects.filter(author=self.request.user)
